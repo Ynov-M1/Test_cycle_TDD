@@ -4,7 +4,7 @@
 	"type": "commonjs",
 	"scripts": {
 		"test": "jest --coverage",
-		"doc": "jsdoc -c jsdoc.json"
+		"doc": "jsdoc -c jsdoc.json -r -d ./docs"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.29.0",
