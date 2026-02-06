@@ -8,6 +8,21 @@ describe("validatePerson Unit Test Suites", () => {
         expect(() => validatePerson("not an object")).toThrow("MISSING_PARAM: person");
     });
 
+    it("should throw MISSING_PARAM for missing fields", () => {
+        expect(() => validatePerson({})).toThrow("MISSING_PARAM: birthDate");
+        expect(() => validatePerson({ birthDate: new Date() })).toThrow("MISSING_PARAM: zip");
+        expect(() => validatePerson({ birthDate: new Date(), zip: "75001" })).toThrow("MISSING_PARAM: identity");
+        expect(() => validatePerson({ birthDate: new Date(), zip: "75001", identity: "Jean" })).toThrow("MISSING_PARAM: email");
+    });
+
+    it("should throw PARAM_TYPE_ERROR for wrong field types", () => {
+        const base = { birthDate: new Date(), zip: "75001", identity: "Jean", email: "test@mail.com" };
+        expect(() => validatePerson({ ...base, birthDate: "2000-01-01" })).toThrow("PARAM_TYPE_ERROR: birthDate must be a Date");
+        expect(() => validatePerson({ ...base, zip: 75001 })).toThrow("PARAM_TYPE_ERROR: zip must be a string");
+        expect(() => validatePerson({ ...base, identity: 123 })).toThrow("PARAM_TYPE_ERROR: identity must be a string");
+        expect(() => validatePerson({ ...base, email: 123 })).toThrow("PARAM_TYPE_ERROR: email must be a string");
+    });
+
     it("should validate a correct person object", () => {
         const person = {
             birthDate: new Date("09/02/2001"),
@@ -56,6 +71,10 @@ describe("validateIdentity RED", () => {
         expect(() => validateIdentity("Theo@")).toThrow("INVALID_IDENTITY");
     });
 
+    it("should throw INVALID_IDENTITY for bad type", () => {
+        expect(() => validateIdentity(123)).toThrow("INVALID_IDENTITY");
+    });
+
     it("should throw XSS_DETECTED for script", () => {
         expect(() => validateIdentity("<script>")).toThrow("XSS_DETECTED");
     });
@@ -63,5 +82,6 @@ describe("validateIdentity RED", () => {
     it("should accept valid names", () => {
         expect(validateIdentity("Jean-Luc")).toBe(true);
         expect(validateIdentity("Élodie")).toBe(true);
+        expect(validateIdentity("Maël")).toBe(true);
     });
 });

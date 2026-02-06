@@ -75,7 +75,10 @@ export function validateZipCode(zip) {
  * @throws {Error} Throws "XSS_DETECTED" for simple XSS patterns
  */
 export function validateIdentity(identity) {
-    // TODO
+    if (typeof identity !== "string") throw new Error("INVALID_IDENTITY");
+    if (/<[^>]*>/.test(identity)) throw new Error("XSS_DETECTED");
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ-]+$/.test(identity)) throw new Error("INVALID_IDENTITY");
+    return true;
 }
 
 /**

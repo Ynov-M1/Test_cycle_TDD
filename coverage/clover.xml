@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1770388360111" clover="3.2.0">
-  <project timestamp="1770388360111" name="All files">
-    <metrics statements="36" coveredstatements="36" conditionals="40" coveredconditionals="32" methods="6" coveredmethods="6" elements="82" coveredelements="74" complexity="0" loc="36" ncloc="36" packages="1" files="2" classes="2"/>
+<coverage generated="1770388641200" clover="3.2.0">
+  <project timestamp="1770388641200" name="All files">
+    <metrics statements="40" coveredstatements="40" conditionals="46" coveredconditionals="46" methods="6" coveredmethods="6" elements="92" coveredelements="92" complexity="0" loc="40" ncloc="40" packages="1" files="2" classes="2"/>
     <file name="module.js" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\src\module.js">
       <metrics statements="13" coveredstatements="13" conditionals="10" coveredconditionals="10" methods="1" coveredmethods="1"/>
       <line num="8" count="12" type="cond" truecount="2" falsecount="0"/>
@@ -19,17 +19,17 @@
       <line num="30" count="4" type="stmt"/>
     </file>
     <file name="validator.js" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\src\validator.js">
-      <metrics statements="23" coveredstatements="23" conditionals="30" coveredconditionals="22" methods="5" coveredmethods="5"/>
-      <line num="14" count="4" type="cond" truecount="4" falsecount="0"/>
+      <metrics statements="27" coveredstatements="27" conditionals="36" coveredconditionals="36" methods="5" coveredmethods="5"/>
+      <line num="14" count="12" type="cond" truecount="4" falsecount="0"/>
       <line num="15" count="3" type="stmt"/>
-      <line num="18" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="19" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="20" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="21" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="23" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="24" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="25" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="26" count="1" type="cond" truecount="1" falsecount="1"/>
+      <line num="18" count="9" type="cond" truecount="2" falsecount="0"/>
+      <line num="19" count="8" type="cond" truecount="2" falsecount="0"/>
+      <line num="20" count="7" type="cond" truecount="2" falsecount="0"/>
+      <line num="21" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="23" count="5" type="cond" truecount="2" falsecount="0"/>
+      <line num="24" count="4" type="cond" truecount="2" falsecount="0"/>
+      <line num="25" count="3" type="cond" truecount="2" falsecount="0"/>
+      <line num="26" count="2" type="cond" truecount="2" falsecount="0"/>
       <line num="28" count="1" type="stmt"/>
       <line num="29" count="1" type="stmt"/>
       <line num="30" count="1" type="stmt"/>
@@ -43,6 +43,10 @@
       <line num="62" count="6" type="cond" truecount="4" falsecount="0"/>
       <line num="63" count="4" type="stmt"/>
       <line num="65" count="2" type="stmt"/>
+      <line num="78" count="8" type="cond" truecount="2" falsecount="0"/>
+      <line num="79" count="7" type="cond" truecount="2" falsecount="0"/>
+      <line num="80" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="81" count="4" type="stmt"/>
     </file>
   </project>
 </coverage>

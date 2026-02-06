@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>24/32</span>
+                <span class='fraction'>39/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>22/30</span>
+                <span class='fraction'>36/36</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>27/27</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -153,7 +153,10 @@
 <a name='L88'></a><a href='#L88'>88</a>
 <a name='L89'></a><a href='#L89'>89</a>
 <a name='L90'></a><a href='#L90'>90</a>
-<a name='L91'></a><a href='#L91'>91</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,19 +169,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -230,7 +233,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,15 +266,15 @@ export function validatePerson(person) {
         throw new Error("MISSING_PARAM: person");
     }
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!person.birthDate) <span class="cstat-no" title="statement not covered" >throw new Error("MISSING_PARAM: birthDate");</span>
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!person.zip) <span class="cstat-no" title="statement not covered" >throw new Error("MISSING_PARAM: zip");</span>
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!person.identity) <span class="cstat-no" title="statement not covered" >throw new Error("MISSING_PARAM: identity");</span>
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!person.email) <span class="cstat-no" title="statement not covered" >throw new Error("MISSING_PARAM: email");</span>
+    if (!person.birthDate) throw new Error("MISSING_PARAM: birthDate");
+    if (!person.zip) throw new Error("MISSING_PARAM: zip");
+    if (!person.identity) throw new Error("MISSING_PARAM: identity");
+    if (!person.email) throw new Error("MISSING_PARAM: email");
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!(person.birthDate instanceof Date)) <span class="cstat-no" title="statement not covered" >throw new TypeError("PARAM_TYPE_ERROR: birthDate must be a Date");</span>
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof person.zip !== "string") <span class="cstat-no" title="statement not covered" >throw new TypeError("PARAM_TYPE_ERROR: zip must be a string");</span>
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof person.identity !== "string") <span class="cstat-no" title="statement not covered" >throw new TypeError("PARAM_TYPE_ERROR: identity must be a string");</span>
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof person.email !== "string") <span class="cstat-no" title="statement not covered" >throw new TypeError("PARAM_TYPE_ERROR: email must be a string");</span>
+    if (!(person.birthDate instanceof Date)) throw new TypeError("PARAM_TYPE_ERROR: birthDate must be a Date");
+    if (typeof person.zip !== "string") throw new TypeError("PARAM_TYPE_ERROR: zip must be a string");
+    if (typeof person.identity !== "string") throw new TypeError("PARAM_TYPE_ERROR: identity must be a string");
+    if (typeof person.email !== "string") throw new TypeError("PARAM_TYPE_ERROR: email must be a string");
 &nbsp;
     validateAge(person.birthDate);
     validateZipCode(person.zip);
@@ -320,7 +326,10 @@ export function validateZipCode(zip) {
  * @throws {Error} Throws "XSS_DETECTED" for simple XSS patterns
  */
 export function validateIdentity(identity) {
-    // TODO
+    if (typeof identity !== "string") throw new Error("INVALID_IDENTITY");
+    if (/&lt;[^&gt;]*&gt;/.test(identity)) throw new Error("XSS_DETECTED");
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ-]+$/.test(identity)) throw new Error("INVALID_IDENTITY");
+    return true;
 }
 &nbsp;
 /**
@@ -340,7 +349,7 @@ export function validateEmail(email) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-06T14:32:40.103Z
+                at 2026-02-06T14:37:21.193Z
             </div>
         <script src="prettify.js"></script>
         <script>
