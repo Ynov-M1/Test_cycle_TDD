@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1770376815762" clover="3.2.0">
-  <project timestamp="1770376815762" name="All files">
-    <metrics statements="13" coveredstatements="13" conditionals="10" coveredconditionals="10" methods="1" coveredmethods="1" elements="24" coveredelements="24" complexity="0" loc="13" ncloc="13" packages="1" files="1" classes="1"/>
+<coverage generated="1770384396857" clover="3.2.0">
+  <project timestamp="1770384396857" name="All files">
+    <metrics statements="20" coveredstatements="16" conditionals="14" coveredconditionals="14" methods="2" coveredmethods="2" elements="36" coveredelements="32" complexity="0" loc="20" ncloc="20" packages="1" files="2" classes="2"/>
     <file name="module.js" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\src\module.js">
       <metrics statements="13" coveredstatements="13" conditionals="10" coveredconditionals="10" methods="1" coveredmethods="1"/>
       <line num="8" count="9" type="cond" truecount="2" falsecount="0"/>
@@ -17,6 +17,16 @@
       <line num="28" count="1" type="stmt"/>
       <line num="29" count="1" type="stmt"/>
       <line num="30" count="1" type="stmt"/>
+    </file>
+    <file name="validator.js" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\src\validator.js">
+      <metrics statements="7" coveredstatements="3" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
+      <line num="8" count="4" type="cond" truecount="4" falsecount="0"/>
+      <line num="9" count="3" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="0" type="stmt"/>
+      <line num="14" count="0" type="stmt"/>
+      <line num="15" count="0" type="stmt"/>
+      <line num="17" count="0" type="stmt"/>
     </file>
   </project>
 </coverage>
