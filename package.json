@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"type": "commonjs",
 	"scripts": {
-		"test": "jest",
+		"test": "jest --coverage",
 		"doc": "jsdoc -c jsdoc.json"
 	},
 	"devDependencies": {
