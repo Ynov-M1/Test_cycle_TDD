@@ -1,0 +1,13 @@
+{
+	"name": "cycle-tdd",
+	"version": "1.0.0",
+	"type": "commonjs",
+	"scripts": {
+		"test": "jest",
+		"doc": "jsdoc -c jsdoc.json"
+	},
+	"devDependencies": {
+		"jest": "^30.2.0",
+		"jsdoc": "^4.0.5"
+	}
+}
