@@ -59,7 +59,10 @@ export function validateAge(birthDate) {
  * @throws {Error} Throws "INVALID_ZIP" if zip is invalid
  */
 export function validateZipCode(zip) {
-    // TODO
+    if (typeof zip !== "string" || !/^\d{5}$/.test(zip)) {
+        throw new Error("INVALID_ZIP");
+    }
+    return true;
 }
 
 /**
