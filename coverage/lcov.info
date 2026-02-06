@@ -45,7 +45,7 @@ FNDA:12,validatePerson
 FNDA:6,validateAge
 FNDA:6,validateZipCode
 FNDA:8,validateIdentity
-FNDA:1,validateEmail
+FNDA:3,validateEmail
 DA:14,12
 DA:15,3
 DA:18,9

@@ -1,4 +1,4 @@
-import {validateIdentity, validatePerson, validateZipCode} from "../src/validator";
+import {validateEmail, validateIdentity, validatePerson, validateZipCode} from "../src/validator";
 import { validateAge } from "../src/validator";
 
 describe("validatePerson Unit Test Suites", () => {
@@ -35,7 +35,7 @@ describe("validatePerson Unit Test Suites", () => {
     });
 });
 
-describe("validateAge RED", () => {
+describe("validateAge Unit Test Suites", () => {
     it("should throw UNDERAGE if age < 18", () => {
         const child = new Date(new Date().getFullYear() - 10, 0, 1);
         expect(() => validateAge(child)).toThrow("UNDERAGE");
@@ -53,7 +53,7 @@ describe("validateAge RED", () => {
     });
 });
 
-describe("validateZipCode RED", () => {
+describe("validateZipCode Unit Test Suites", () => {
     it("should throw INVALID_ZIP for invalid codes", () => {
         ["1234", "ABCDE", null, "123456"].forEach(zip => {
             expect(() => validateZipCode(zip)).toThrow("INVALID_ZIP");
@@ -65,7 +65,7 @@ describe("validateZipCode RED", () => {
     });
 });
 
-describe("validateIdentity RED", () => {
+describe("validateIdentity Unit Test Suites", () => {
     it("should throw INVALID_IDENTITY for numbers or symbols", () => {
         expect(() => validateIdentity("Theo3")).toThrow("INVALID_IDENTITY");
         expect(() => validateIdentity("Theo@")).toThrow("INVALID_IDENTITY");
@@ -83,5 +83,17 @@ describe("validateIdentity RED", () => {
         expect(validateIdentity("Jean-Luc")).toBe(true);
         expect(validateIdentity("Élodie")).toBe(true);
         expect(validateIdentity("Maël")).toBe(true);
+    });
+});
+
+describe("validateEmail Unit Test Suites", () => {
+    it("should throw INVALID_EMAIL for invalid emails", () => {
+        ["test@", "@mail.com", "test@mail"].forEach(email => {
+            expect(() => validateEmail(email)).toThrow("INVALID_EMAIL");
+        });
+    });
+
+    it("should accept valid emails", () => {
+        expect(validateEmail("test@mail.com")).toBe(true);
     });
 });
