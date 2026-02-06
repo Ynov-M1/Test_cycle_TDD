@@ -10,10 +10,10 @@ describe("validatePerson Unit Test Suites", () => {
 
     it("should validate a correct person object", () => {
         const person = {
-            birth: new Date("09/02/2001"),
-            zip: "75001",
-            identity: "Jean",
-            email: "jean@mail.com"
+            birthDate: new Date("09/02/2001"),
+            zip: "03100",
+            identity: "Théo",
+            email: "theo@mail.com"
         };
 
         expect(validatePerson(person)).toBe(true);
@@ -30,5 +30,10 @@ describe("validateAge RED", () => {
         expect(() => validateAge(null)).toThrow("INVALID_DATE");
         expect(() => validateAge("abc")).toThrow("INVALID_DATE");
         expect(() => validateAge(new Date("invalid date"))).toThrow("INVALID_DATE");
+    });
+
+    it("should accept adult", () => {
+        const adult = new Date(new Date().getFullYear() - 20, 0, 1);
+        expect(validateAge(adult)).toBe(true);
     });
 });
