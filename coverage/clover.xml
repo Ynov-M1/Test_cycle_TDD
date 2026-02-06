@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1770387937146" clover="3.2.0">
-  <project timestamp="1770387937146" name="All files">
+<coverage generated="1770388360111" clover="3.2.0">
+  <project timestamp="1770388360111" name="All files">
     <metrics statements="36" coveredstatements="36" conditionals="40" coveredconditionals="32" methods="6" coveredmethods="6" elements="82" coveredelements="74" complexity="0" loc="36" ncloc="36" packages="1" files="2" classes="2"/>
     <file name="module.js" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\src\module.js">
       <metrics statements="13" coveredstatements="13" conditionals="10" coveredconditionals="10" methods="1" coveredmethods="1"/>

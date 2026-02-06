@@ -44,7 +44,7 @@ FNH:5
 FNDA:4,validatePerson
 FNDA:6,validateAge
 FNDA:6,validateZipCode
-FNDA:1,validateIdentity
+FNDA:4,validateIdentity
 FNDA:1,validateEmail
 DA:14,4
 DA:15,3

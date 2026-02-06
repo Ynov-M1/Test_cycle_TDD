@@ -1,4 +1,4 @@
-import {validatePerson, validateZipCode} from "../src/validator";
+import {validateIdentity, validatePerson, validateZipCode} from "../src/validator";
 import { validateAge } from "../src/validator";
 
 describe("validatePerson Unit Test Suites", () => {
@@ -47,5 +47,21 @@ describe("validateZipCode RED", () => {
 
     it("should accept a valid code", () => {
         expect(validateZipCode("03100")).toBe(true);
+    });
+});
+
+describe("validateIdentity RED", () => {
+    it("should throw INVALID_IDENTITY for numbers or symbols", () => {
+        expect(() => validateIdentity("Theo3")).toThrow("INVALID_IDENTITY");
+        expect(() => validateIdentity("Theo@")).toThrow("INVALID_IDENTITY");
+    });
+
+    it("should throw XSS_DETECTED for script", () => {
+        expect(() => validateIdentity("<script>")).toThrow("XSS_DETECTED");
+    });
+
+    it("should accept valid names", () => {
+        expect(validateIdentity("Jean-Luc")).toBe(true);
+        expect(validateIdentity("Élodie")).toBe(true);
     });
 });
