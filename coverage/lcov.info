@@ -45,7 +45,7 @@ FNDA:12,validatePerson
 FNDA:6,validateAge
 FNDA:6,validateZipCode
 FNDA:8,validateIdentity
-FNDA:3,validateEmail
+FNDA:6,validateEmail
 DA:14,12
 DA:15,3
 DA:18,9
@@ -73,8 +73,11 @@ DA:78,8
 DA:79,7
 DA:80,6
 DA:81,4
-LF:27
-LH:27
+DA:92,6
+DA:93,4
+DA:95,2
+LF:30
+LH:30
 BRDA:14,0,0,3
 BRDA:14,0,1,9
 BRDA:14,1,0,12
@@ -111,6 +114,10 @@ BRDA:79,16,0,1
 BRDA:79,16,1,6
 BRDA:80,17,0,2
 BRDA:80,17,1,4
-BRF:36
-BRH:36
+BRDA:92,18,0,4
+BRDA:92,18,1,2
+BRDA:92,19,0,6
+BRDA:92,19,1,5
+BRF:40
+BRH:40
 end_of_record

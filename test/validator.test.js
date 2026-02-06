@@ -55,7 +55,7 @@ describe("validateAge Unit Test Suites", () => {
 
 describe("validateZipCode Unit Test Suites", () => {
     it("should throw INVALID_ZIP for invalid codes", () => {
-        ["1234", "ABCDE", null, "123456"].forEach(zip => {
+        ["1234", "ABCDE", null, "123456", ].forEach(zip => {
             expect(() => validateZipCode(zip)).toThrow("INVALID_ZIP");
         });
     });
@@ -67,8 +67,9 @@ describe("validateZipCode Unit Test Suites", () => {
 
 describe("validateIdentity Unit Test Suites", () => {
     it("should throw INVALID_IDENTITY for numbers or symbols", () => {
-        expect(() => validateIdentity("Theo3")).toThrow("INVALID_IDENTITY");
-        expect(() => validateIdentity("Theo@")).toThrow("INVALID_IDENTITY");
+        ["Theo3", "Theo@"].forEach(identity => {
+            expect(() => validateIdentity(identity)).toThrow("INVALID_IDENTITY");
+        })
     });
 
     it("should throw INVALID_IDENTITY for bad type", () => {
@@ -80,15 +81,15 @@ describe("validateIdentity Unit Test Suites", () => {
     });
 
     it("should accept valid names", () => {
-        expect(validateIdentity("Jean-Luc")).toBe(true);
-        expect(validateIdentity("Élodie")).toBe(true);
-        expect(validateIdentity("Maël")).toBe(true);
+        ["Jean-Luc", "Élodie", "Maël"].forEach(identity => {
+            expect(validateIdentity(identity)).toBe(true);
+        })
     });
 });
 
 describe("validateEmail Unit Test Suites", () => {
     it("should throw INVALID_EMAIL for invalid emails", () => {
-        ["test@", "@mail.com", "test@mail"].forEach(email => {
+        ["test@", "@mail.com", "test@mail", null, ].forEach(email => {
             expect(() => validateEmail(email)).toThrow("INVALID_EMAIL");
         });
     });

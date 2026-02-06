@@ -89,5 +89,8 @@ export function validateIdentity(identity) {
  * @throws {Error} Throws "INVALID_EMAIL" if email format is incorrect
  */
 export function validateEmail(email) {
-    // TODO
+    if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new Error("INVALID_EMAIL");
+    }
+    return true;
 }
