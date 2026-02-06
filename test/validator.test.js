@@ -1,4 +1,5 @@
-import { validatePerson } from "../src/validator"
+import { validatePerson } from "../src/validator";
+import { validateAge } from "../src/validator";
 
 describe("validatePerson Unit Test Suites", () => {
     it("should throw INVALID_PERSON if param is missing or invalid", () => {
@@ -16,5 +17,18 @@ describe("validatePerson Unit Test Suites", () => {
         };
 
         expect(validatePerson(person)).toBe(true);
+    });
+});
+
+describe("validateAge RED", () => {
+    it("should throw UNDERAGE if age < 18", () => {
+        const child = new Date(new Date().getFullYear() - 10, 0, 1);
+        expect(() => validateAge(child)).toThrow("UNDERAGE");
+    });
+
+    it("should throw INVALID_DATE if birthDate is invalid", () => {
+        expect(() => validateAge(null)).toThrow("INVALID_DATE");
+        expect(() => validateAge("abc")).toThrow("INVALID_DATE");
+        expect(() => validateAge(new Date("invalid date"))).toThrow("INVALID_DATE");
     });
 });
