@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { validatePerson, validateAge, validateZipCode, validateName, validateEmail } from '../domain/validator'
+import { validatePerson, validateAge, validateZipCode, validateCity, validateName, validateEmail } from '../domain/validator'
 import './PersonForm.css'
 
 export default function PersonForm() {
@@ -35,6 +35,9 @@ export default function PersonForm() {
                 case 'zip':
                     validateZipCode(value)
                     break
+                case 'city':
+                    validateCity(value)
+                    break
                 case 'birthDate':
                     validateAge(new Date(value))
                     break
@@ -62,7 +65,7 @@ export default function PersonForm() {
                 email: form.email,
                 birthDate: new Date(form.birthDate),
                 zip: form.zip,
-                city: form.city,
+                city: form.city
             }
             validatePerson(person)
             localStorage.setItem('person', JSON.stringify(person))
@@ -77,7 +80,8 @@ export default function PersonForm() {
                     err.message.includes('LAST_NAME') ? 'lastName' :
                         err.message.includes('EMAIL') ? 'email' :
                             err.message.includes('ZIP') ? 'zip' :
-                                err.message.includes('UNDERAGE') ? 'birthDate' : 'form'
+                                err.message.includes('CITY') ? 'city' :
+                                    err.message.includes('UNDERAGE') ? 'birthDate' : 'form'
             setErrors({ [key]: err.message })
             setSuccess(false)
         }
@@ -140,7 +144,9 @@ export default function PersonForm() {
                         placeholder="Ville"
                         value={form.city}
                         onChange={handleChange}
+                        onBlur={(e) => validateField('city', e.target.value)}
                     />
+                    {errors.city && <span className="error">{errors.city}</span>}
                 </div>
 
                 <div className="form-group">
