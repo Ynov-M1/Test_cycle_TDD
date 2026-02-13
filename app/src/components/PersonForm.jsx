@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { validatePerson, validateAge, validateZipCode, validateCity, validateName, validateEmail } from '../domain/validator'
+import { getErrorMessage } from '../utils/errorMessages'
 import './PersonForm.css'
 
 export default function PersonForm() {
@@ -102,7 +103,7 @@ export default function PersonForm() {
                         onChange={handleChange}
                         onBlur={(e) => validateField('firstName', e.target.value)}
                     />
-                    {errors.firstName && <span className="error">{errors.firstName}</span>}
+                    {errors.firstName && <span className="error">{getErrorMessage(errors.firstName)}</span>}
                 </div>
 
                 <div className="form-group">
@@ -113,7 +114,7 @@ export default function PersonForm() {
                         onChange={handleChange}
                         onBlur={(e) => validateField('lastName', e.target.value)}
                     />
-                    {errors.lastName && <span className="error">{errors.lastName}</span>}
+                    {errors.lastName && <span className="error">{getErrorMessage(errors.lastName)}</span>}
                 </div>
 
                 <div className="form-group">
@@ -124,7 +125,7 @@ export default function PersonForm() {
                         onChange={handleChange}
                         onBlur={(e) => validateField('birthDate', e.target.value)}
                     />
-                    {errors.birthDate && <span className="error">{errors.birthDate}</span>}
+                    {errors.birthDate && <span className="error">{getErrorMessage(errors.birthDate)}</span>}
                 </div>
 
                 <div className="form-group">
@@ -135,7 +136,7 @@ export default function PersonForm() {
                         onChange={handleChange}
                         onBlur={(e) => validateField('zip', e.target.value)}
                     />
-                    {errors.zip && <span className="error">{errors.zip}</span>}
+                    {errors.zip && <span className="error">{getErrorMessage(errors.zip)}</span>}
                 </div>
 
                 <div className="form-group">
@@ -146,7 +147,7 @@ export default function PersonForm() {
                         onChange={handleChange}
                         onBlur={(e) => validateField('city', e.target.value)}
                     />
-                    {errors.city && <span className="error">{errors.city}</span>}
+                    {errors.city && <span className="error">{getErrorMessage(errors.city)}</span>}
                 </div>
 
                 <div className="form-group">
@@ -157,7 +158,7 @@ export default function PersonForm() {
                         onChange={handleChange}
                         onBlur={(e) => validateField('email', e.target.value)}
                     />
-                    {errors.email && <span className="error">{errors.email}</span>}
+                    {errors.email && <span className="error">{getErrorMessage(errors.email)}</span>}
                 </div>
 
                 <button type="submit" disabled={isDisabled}>
