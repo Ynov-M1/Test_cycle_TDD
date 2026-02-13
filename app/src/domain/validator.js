@@ -5,11 +5,12 @@ import {calculateAge} from "./module.js";
  * @param {Object} person - { birthDate, zip, identity, email }
  * @param {Date} person.birthDate - Date of birth
  * @param {string} person.zip - French zip code (5 digits)
+ * @param {string} person.city - City name (letters, accents, espace, hyphens)
  * @param {string} person.firstName - First name (letters, accents, hyphens)
  * @param {string} person.lastName - Last name (letters, accents, hyphens)
  * @param {string} person.email - Email address
  * @returns {true} if everything is valid
- * @throws {Error} MISSING_PARAM, PARAM_TYPE_ERROR, UNDERAGE, INVALID_ZIP, INVALID_FIRST_NAME, INVALID_LAST_NAME, XSS_DETECTED, INVALID_EMAIL
+ * @throws {Error} MISSING_PARAM, PARAM_TYPE_ERROR, UNDERAGE, INVALID_ZIP, INVALID_CITY, INVALID_FIRST_NAME, INVALID_LAST_NAME, XSS_DETECTED, INVALID_EMAIL
  */
 export function validatePerson(person) {
     if (!person || typeof person !== "object") {
@@ -18,18 +19,21 @@ export function validatePerson(person) {
 
     if (!person.birthDate) throw new Error("MISSING_PARAM: birthDate");
     if (!person.zip) throw new Error("MISSING_PARAM: zip");
+    if (!person.city) throw new Error("MISSING_PARAM: city");
     if (!person.firstName) throw new Error("MISSING_PARAM: firstName");
     if (!person.lastName) throw new Error("MISSING_PARAM: lastName");
     if (!person.email) throw new Error("MISSING_PARAM: email");
 
     if (!(person.birthDate instanceof Date)) throw new TypeError("PARAM_TYPE_ERROR: birthDate must be a Date");
     if (typeof person.zip !== "string") throw new TypeError("PARAM_TYPE_ERROR: zip must be a string");
+    if (typeof person.city !== "string") throw new TypeError("PARAM_TYPE_ERROR: city must be a string");
     if (typeof person.firstName !== "string") throw new TypeError("PARAM_TYPE_ERROR: firstName must be a string");
     if (typeof person.lastName !== "string") throw new TypeError("PARAM_TYPE_ERROR: lastName must be a string");
     if (typeof person.email !== "string") throw new TypeError("PARAM_TYPE_ERROR: email must be a string");
 
     validateAge(person.birthDate);
     validateZipCode(person.zip);
+    validateCity(person.city)
     validateName(person.firstName);
     validateName(person.lastName);
     validateEmail(person.email);
@@ -73,6 +77,25 @@ export function validateZipCode(zip) {
     }
     return true;
 }
+
+/**
+ * Validate a city name.
+ * Only letters, accents, spaces and hyphens are allowed.
+ * Rejects simple XSS patterns.
+ * @param {string} city - The city name to validate
+ * @returns {boolean} true if valid
+ * @throws {Error} INVALID_CITY if format is incorrect
+ * @throws {Error} XSS_DETECTED if a basic XSS pattern is detected
+ */
+export function validateCity(city) {
+    if (typeof city !== "string") throw new Error("INVALID_CITY");
+    if (/<[^>]*>/.test(city)) throw new Error("XSS_DETECTED");
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s-]+$/.test(city)) {
+        throw new Error("INVALID_CITY");
+    }
+    return true;
+}
+
 
 /**
  * Validate a name (first or last) and return specific error messages
