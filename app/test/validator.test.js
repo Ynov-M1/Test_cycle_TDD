@@ -49,6 +49,11 @@ describe("validateAge Unit Test Suites", () => {
         expect(() => validateAge(new Date("invalid date"))).toThrow("INVALID_DATE");
     });
 
+    it("should throw FUTURE_DATE if birthDate is in the future", () => {
+        const future = new Date(new Date().getFullYear() + 5, 0, 1);
+        expect(() => validateAge(future)).toThrow("FUTURE_DATE");
+    });
+
     it("should accept adult", () => {
         const adult = new Date(new Date().getFullYear() - 20, 0, 1);
         expect(validateAge(adult)).toBe(true);

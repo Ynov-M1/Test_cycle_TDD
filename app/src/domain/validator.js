@@ -42,12 +42,17 @@ export function validatePerson(person) {
  * Rejects if under 18 years old.
  * @param {Date} birthDate - Date of birth
  * @returns {boolean} Returns true if age is 18 or older
- * @throws {Error} UNDERAGE if age < 18, INVALID_DATE if birthDate is invalid
+ * @throws {Error} UNDERAGE if age < 18
+ * @throws {TypeError} INVALID_DATE if birthDate is not a valid Date
+ * @throws {Error} FUTURE_DATE if birthDate is in the future
  */
 export function validateAge(birthDate) {
     if (!(birthDate instanceof Date) || Number.isNaN(birthDate.getTime())) {
         throw new TypeError("INVALID_DATE");
     }
+
+    const now = new Date();
+    if (birthDate > now) throw new Error("FUTURE_DATE");
 
     const age = calculateAge({birth: birthDate});
     if (age < 18) throw new Error("UNDERAGE");
