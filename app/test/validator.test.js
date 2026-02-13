@@ -1,5 +1,4 @@
-import {validateEmail, validateIdentity, validatePerson, validateZipCode} from "../src/domain/validator.js";
-import { validateAge } from "../src/domain/validator.js";
+import {validateEmail, validateName, validateAge, validatePerson, validateZipCode} from "../src/domain/validator.js";
 
 describe("validatePerson Unit Test Suites", () => {
     it("should throw INVALID_PERSON if param is missing or invalid", () => {
@@ -11,15 +10,17 @@ describe("validatePerson Unit Test Suites", () => {
     it("should throw MISSING_PARAM for missing fields", () => {
         expect(() => validatePerson({})).toThrow("MISSING_PARAM: birthDate");
         expect(() => validatePerson({ birthDate: new Date() })).toThrow("MISSING_PARAM: zip");
-        expect(() => validatePerson({ birthDate: new Date(), zip: "75001" })).toThrow("MISSING_PARAM: identity");
-        expect(() => validatePerson({ birthDate: new Date(), zip: "75001", identity: "Jean" })).toThrow("MISSING_PARAM: email");
+        expect(() => validatePerson({ birthDate: new Date(), zip: "75001" })).toThrow("MISSING_PARAM: firstName");
+        expect(() => validatePerson({ birthDate: new Date(), zip: "75001", firstName: "Théo" })).toThrow("MISSING_PARAM: lastName");
+        expect(() => validatePerson({ birthDate: new Date(), zip: "75001", firstName: "Théo", lastName: "Lafond" })).toThrow("MISSING_PARAM: email");
     });
 
     it("should throw PARAM_TYPE_ERROR for wrong field types", () => {
-        const base = { birthDate: new Date(), zip: "75001", identity: "Jean", email: "test@mail.com" };
+        const base = { birthDate: new Date(), zip: "75001", firstName: "Théo", lastName: "Lafond", email: "test@mail.com" };
         expect(() => validatePerson({ ...base, birthDate: "2000-01-01" })).toThrow("PARAM_TYPE_ERROR: birthDate must be a Date");
         expect(() => validatePerson({ ...base, zip: 75001 })).toThrow("PARAM_TYPE_ERROR: zip must be a string");
-        expect(() => validatePerson({ ...base, identity: 123 })).toThrow("PARAM_TYPE_ERROR: identity must be a string");
+        expect(() => validatePerson({ ...base, firstName: 123 })).toThrow("PARAM_TYPE_ERROR: firstName must be a string");
+        expect(() => validatePerson({ ...base, lastName: 123 })).toThrow("PARAM_TYPE_ERROR: lastName must be a string");
         expect(() => validatePerson({ ...base, email: 123 })).toThrow("PARAM_TYPE_ERROR: email must be a string");
     });
 
@@ -27,7 +28,8 @@ describe("validatePerson Unit Test Suites", () => {
         const person = {
             birthDate: new Date("09/02/2001"),
             zip: "03100",
-            identity: "Théo",
+            firstName: "Théo",
+            lastName: "Lafond",
             email: "theo@mail.com"
         };
 
@@ -65,25 +67,25 @@ describe("validateZipCode Unit Test Suites", () => {
     });
 });
 
-describe("validateIdentity Unit Test Suites", () => {
-    it("should throw INVALID_IDENTITY for numbers or symbols", () => {
-        ["Theo3", "Theo@"].forEach(identity => {
-            expect(() => validateIdentity(identity)).toThrow("INVALID_IDENTITY");
-        })
+describe("validateName Unit Test Suites", () => {
+    it("should throw INVALID_FIRST_NAME or INVALID_LAST_NAME for bad characters", () => {
+        expect(() => validateName("Théo3", "firstName")).toThrow("INVALID_FIRST_NAME");
+        expect(() => validateName("Dur@nd", "lastName")).toThrow("INVALID_LAST_NAME");
     });
 
     it("should throw INVALID_IDENTITY for bad type", () => {
-        expect(() => validateIdentity(123)).toThrow("INVALID_IDENTITY");
+        expect(() => validateName(123, "firstName")).toThrow("INVALID_FIRST_NAME");
+        expect(() => validateName(123, "lastName")).toThrow("INVALID_LAST_NAME");
     });
 
-    it("should throw XSS_DETECTED for script", () => {
-        expect(() => validateIdentity("<script>")).toThrow("XSS_DETECTED");
+    it("should throw XSS_DETECTED for script injections", () => {
+        expect(() => validateName("<script>", "firstName")).toThrow("XSS_DETECTED");
     });
 
     it("should accept valid names", () => {
-        ["Jean-Luc", "Élodie", "Maël"].forEach(identity => {
-            expect(validateIdentity(identity)).toBe(true);
-        })
+        expect(validateName("Jean-Luc", "firstName")).toBe(true);
+        expect(validateName("Élodie", "lastName")).toBe(true);
+        expect(validateName("Maël", "firstName")).toBe(true);
     });
 });
 

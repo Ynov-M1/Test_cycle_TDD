@@ -364,7 +364,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line43">line 43</a>
+        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -552,7 +552,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line91">line 91</a>
+        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line95">line 95</a>
     </li></ul></dd>
     
 
@@ -639,7 +639,7 @@
     
 
     
-    <h4 class="name" id="validateIdentity"><span class="type-signature"></span>validateIdentity<span class="signature">(identity)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="validateName"><span class="type-signature"></span>validateName<span class="signature">(name, type)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
 
     
@@ -647,7 +647,7 @@
 
 
 <div class="description">
-    Validates identity (name/first name).Only letters, accents, and hyphens are allowed.Rejects simple XSS patterns.
+    Validate a name (first or last) and return specific error messages
 </div>
 
 
@@ -683,7 +683,7 @@
 
         <tr>
             
-                <td class="name"><code>identity</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -699,7 +699,30 @@
 
             
 
-            <td class="description last">Name or first name</td>
+            <td class="description last">The name to validate</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">"firstName" or "lastName" for custom error messages</td>
         </tr>
 
     
@@ -740,7 +763,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line77">line 77</a>
+        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -764,13 +787,13 @@
 
 
 <h5>Throws:</h5>
-<ul>
-        <li>
+
+        
 
 <dl>
     <dt>
         <div class="param-desc">
-        Throws "INVALID_IDENTITY" for invalid characters
+        with message INVALID_FIRST_NAME or INVALID_LAST_NAME, XSS_DETECTED
         </div>
     </dt>
     <dd></dd>
@@ -790,42 +813,15 @@
     <dd></dd>
 </dl>
 
-</li>
+
     
-        <li>
-
-<dl>
-    <dt>
-        <div class="param-desc">
-        Throws "XSS_DETECTED" for simple XSS patterns
-        </div>
-    </dt>
-    <dd></dd>
-    <dt>
-        <dl>
-            <dt>
-                Type
-            </dt>
-            <dd>
-                
-<span class="param-type">Error</span>
-
-
-            </dd>
-        </dl>
-    </dt>
-    <dd></dd>
-</dl>
-
-</li>
-    </ul>
 
 
 <h5>Returns:</h5>
 
         
 <div class="param-desc">
-    Returns true if identity is valid
+    true if valid
 </div>
 
 
@@ -986,7 +982,7 @@
 
         <tr>
             
-                <td class="name"><code>identity</code></td>
+                <td class="name"><code>firstName</code></td>
             
 
             <td class="type">
@@ -1002,7 +998,30 @@
 
             
 
-            <td class="description last">Name/first name (letters, accents, hyphens)</td>
+            <td class="description last">First name (letters, accents, hyphens)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lastName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Last name (letters, accents, hyphens)</td>
         </tr>
 
     
@@ -1073,7 +1092,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line13">line 13</a>
+        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -1103,7 +1122,7 @@
 <dl>
     <dt>
         <div class="param-desc">
-        MISSING_PARAM, PARAM_TYPE_ERROR, UNDERAGE, INVALID_ZIP, INVALID_IDENTITY, XSS_DETECTED, INVALID_EMAIL
+        MISSING_PARAM, PARAM_TYPE_ERROR, UNDERAGE, INVALID_ZIP, INVALID_FIRST_NAME, INVALID_LAST_NAME, XSS_DETECTED, INVALID_EMAIL
         </div>
     </dt>
     <dd></dd>
@@ -1261,7 +1280,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line61">line 61</a>
+        <a href="validator.js.html">validator.js</a>, <a href="validator.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -1358,13 +1377,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calculateAge">calculateAge</a></li><li><a href="global.html#validateAge">validateAge</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateIdentity">validateIdentity</a></li><li><a href="global.html#validatePerson">validatePerson</a></li><li><a href="global.html#validateZipCode">validateZipCode</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calculateAge">calculateAge</a></li><li><a href="global.html#validateAge">validateAge</a></li><li><a href="global.html#validateEmail">validateEmail</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePerson">validatePerson</a></li><li><a href="global.html#validateZipCode">validateZipCode</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Feb 13 2026 10:19:06 GMT+0100 (heure normale d’Europe centrale)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Feb 13 2026 10:51:05 GMT+0100 (heure normale d’Europe centrale)
 </footer>
 
 <script> prettyPrint(); </script>

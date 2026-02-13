@@ -5,10 +5,11 @@ import {calculateAge} from "./module.js";
  * @param {Object} person - { birthDate, zip, identity, email }
  * @param {Date} person.birthDate - Date of birth
  * @param {string} person.zip - French zip code (5 digits)
- * @param {string} person.identity - Name/first name (letters, accents, hyphens)
+ * @param {string} person.firstName - First name (letters, accents, hyphens)
+ * @param {string} person.lastName - Last name (letters, accents, hyphens)
  * @param {string} person.email - Email address
  * @returns {true} if everything is valid
- * @throws {Error} MISSING_PARAM, PARAM_TYPE_ERROR, UNDERAGE, INVALID_ZIP, INVALID_IDENTITY, XSS_DETECTED, INVALID_EMAIL
+ * @throws {Error} MISSING_PARAM, PARAM_TYPE_ERROR, UNDERAGE, INVALID_ZIP, INVALID_FIRST_NAME, INVALID_LAST_NAME, XSS_DETECTED, INVALID_EMAIL
  */
 export function validatePerson(person) {
     if (!person || typeof person !== "object") {
@@ -17,17 +18,20 @@ export function validatePerson(person) {
 
     if (!person.birthDate) throw new Error("MISSING_PARAM: birthDate");
     if (!person.zip) throw new Error("MISSING_PARAM: zip");
-    if (!person.identity) throw new Error("MISSING_PARAM: identity");
+    if (!person.firstName) throw new Error("MISSING_PARAM: firstName");
+    if (!person.lastName) throw new Error("MISSING_PARAM: lastName");
     if (!person.email) throw new Error("MISSING_PARAM: email");
 
     if (!(person.birthDate instanceof Date)) throw new TypeError("PARAM_TYPE_ERROR: birthDate must be a Date");
     if (typeof person.zip !== "string") throw new TypeError("PARAM_TYPE_ERROR: zip must be a string");
-    if (typeof person.identity !== "string") throw new TypeError("PARAM_TYPE_ERROR: identity must be a string");
+    if (typeof person.firstName !== "string") throw new TypeError("PARAM_TYPE_ERROR: firstName must be a string");
+    if (typeof person.lastName !== "string") throw new TypeError("PARAM_TYPE_ERROR: lastName must be a string");
     if (typeof person.email !== "string") throw new TypeError("PARAM_TYPE_ERROR: email must be a string");
 
     validateAge(person.birthDate);
     validateZipCode(person.zip);
-    validateIdentity(person.identity);
+    validateName(person.firstName);
+    validateName(person.lastName);
     validateEmail(person.email);
 
     return true;
@@ -66,18 +70,18 @@ export function validateZipCode(zip) {
 }
 
 /**
- * Validates identity (name/first name).
- * Only letters, accents, and hyphens are allowed.
- * Rejects simple XSS patterns.
- * @param {string} identity - Name or first name
- * @returns {boolean} Returns true if identity is valid
- * @throws {Error} Throws "INVALID_IDENTITY" for invalid characters
- * @throws {Error} Throws "XSS_DETECTED" for simple XSS patterns
+ * Validate a name (first or last) and return specific error messages
+ * @param {string} name - The name to validate
+ * @param {string} type - "firstName" or "lastName" for custom error messages
+ * @returns {boolean} true if valid
+ * @throws {Error} with message INVALID_FIRST_NAME or INVALID_LAST_NAME, XSS_DETECTED
  */
-export function validateIdentity(identity) {
-    if (typeof identity !== "string") throw new Error("INVALID_IDENTITY");
-    if (/<[^>]*>/.test(identity)) throw new Error("XSS_DETECTED");
-    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ-]+$/.test(identity)) throw new Error("INVALID_IDENTITY");
+export function validateName(name, type = "firstName") {
+    if (typeof name !== "string") throw new Error(type === "firstName" ? "INVALID_FIRST_NAME" : "INVALID_LAST_NAME");
+    if (/<[^>]*>/.test(name)) throw new Error("XSS_DETECTED");
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ-]+$/.test(name)) {
+        throw new Error(type === "firstName" ? "INVALID_FIRST_NAME" : "INVALID_LAST_NAME");
+    }
     return true;
 }
 
