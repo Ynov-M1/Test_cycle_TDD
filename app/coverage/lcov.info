@@ -1,5 +1,5 @@
 TN:
-SF:src\module.js
+SF:src\domain\module.js
 FN:7,calculateAge
 FNF:1
 FNH:1
@@ -33,7 +33,7 @@ BRF:10
 BRH:10
 end_of_record
 TN:
-SF:src\validator.js
+SF:src\domain\validator.js
 FN:13,validatePerson
 FN:43,validateAge
 FN:61,validateZipCode

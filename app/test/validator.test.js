@@ -1,5 +1,5 @@
-import {validateEmail, validateIdentity, validatePerson, validateZipCode} from "../src/validator";
-import { validateAge } from "../src/validator";
+import {validateEmail, validateIdentity, validatePerson, validateZipCode} from "../src/domain/validator.js";
+import { validateAge } from "../src/domain/validator.js";
 
 describe("validatePerson Unit Test Suites", () => {
     it("should throw INVALID_PERSON if param is missing or invalid", () => {
