@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { validatePerson, validateAge, validateZipCode, validateCity, validateName, validateEmail } from '../domain/validator'
 import { getErrorMessage } from '../utils/errorMessages'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import './PersonForm.css'
 
 export default function PersonForm() {
@@ -14,7 +16,6 @@ export default function PersonForm() {
     })
 
     const [errors, setErrors] = useState({})
-    const [success, setSuccess] = useState(false)
 
     const validateField = (name, value) => {
         if (!value) {
@@ -70,11 +71,9 @@ export default function PersonForm() {
             }
             validatePerson(person)
             localStorage.setItem('person', JSON.stringify(person))
-            setSuccess(true)
+            toast.success("Enregistré avec succès !")
             setForm({ firstName: '', lastName: '', email: '', birthDate: '', zip: '', city: '' })
             setErrors({})
-            // Masquer le succès après 3s
-            setTimeout(() => setSuccess(false), 3000)
         } catch (err) {
             const key =
                 err.message.includes('FIRST_NAME') ? 'firstName' :
@@ -82,9 +81,9 @@ export default function PersonForm() {
                         err.message.includes('EMAIL') ? 'email' :
                             err.message.includes('ZIP') ? 'zip' :
                                 err.message.includes('CITY') ? 'city' :
-                                    err.message.includes('UNDERAGE') ? 'birthDate' : 'form'
+                                    err.message.includes('UNDERAGE') ? 'birthDate' :
+                                        err.message.includes('FUTURE_DATE') ? 'birthDate' :'form'
             setErrors({ [key]: err.message })
-            setSuccess(false)
         }
     }
 
@@ -164,9 +163,19 @@ export default function PersonForm() {
                 <button type="submit" disabled={isDisabled}>
                     Soumettre
                 </button>
-
-                {success && <div className="success">Enregistré avec succès !</div>}
             </form>
+
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     )
 }
