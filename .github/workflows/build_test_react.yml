@@ -25,15 +25,17 @@ jobs:
         with:
           version: 10
 
-      - name: Install, Build and Test
-        run: |
-          cd app
-          pnpm install --frozen-lockfile
-          pnpm run build
-          pnpm test
+      - name: Install dependencies
+        run: cd app && pnpm install --frozen-lockfile
 
       - name: Generate JSDoc
         run: cd app && pnpm run doc
+
+      - name: Build React App
+        run: cd app && pnpm run build
+
+      - name: Run Tests
+        run: cd app && pnpm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
