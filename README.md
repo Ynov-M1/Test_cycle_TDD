@@ -29,7 +29,7 @@ git clone https://github.com/Ynov-M1/Test_cycle_TDD.git
 
 Accédez au dossier de l’application :
 ```
-cd Test_cycle_TDD/app
+cd app
 ```
 
 Installez les dépendances :
