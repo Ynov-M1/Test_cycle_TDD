@@ -1,6 +1,6 @@
 name: Build and Test React Application
 
-on: 
+on:
   push:
     branches: [master]
 
@@ -10,28 +10,33 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x, 21.x]
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v2
 
+    steps:
+      # 1. Clone repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
+      # 3. Setup pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
 
-      - name: Install dependencies
+      # 4. Enable Corepack (assure que pnpm est dans le PATH)
+      - name: Enable Corepack
+        run: corepack enable
+
+      # 5. Install dependencies + Build + Test en un seul step
+      - name: Install, Build and Test
         run: |
           cd app
           pnpm install --frozen-lockfile
-
-      - name: Build and Test
-        run: |
-          cd app
           pnpm run build --if-present
           pnpm test
