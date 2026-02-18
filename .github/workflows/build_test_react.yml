@@ -28,6 +28,6 @@ jobs:
       - name: Install, Build and Test
         run: |
           cd app
-          pnpm ci
+          pnpm install --frozen-lockfile
           pnpm run build
           pnpm test
