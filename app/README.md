@@ -1,16 +1,64 @@
-# React + Vite
+# Test Cycle TDD – React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ce projet est un exemple d’application React configurée avec Vite, intégrant :
 
-Currently, two official plugins are available:
+- Tests unitaires et d’intégration avec Jest et React Testing Library
+- Suivi de couverture de code via Codecov
+- Génération automatique de documentation technique avec JSDoc
+- Workflow CI/CD GitHub Actions pour build, tests et déploiement sur GitHub Pages
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Liens rapides
 
-## React Compiler
+- Dépôt GitHub : https://github.com/Ynov-M1/Test_cycle_TDD
+- Application déployée : https://ynov-m1.github.io/Test_cycle_TDD/
+- Documentation technique (JSDoc) : https://ynov-m1.github.io/Test_cycle_TDD/docs/
+- Tableau de bord Codecov : https://codecov.io/gh/Ynov-M1/Test_cycle_TDD
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Prérequis
 
-## Expanding the ESLint configuration
+- Node.js ≥ 20.x recommandé
+- pnpm
+- Git
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Installation et exécution en local
+
+Clonez le dépôt :
+```
+git clone https://github.com/Ynov-M1/Test_cycle_TDD.git
+```
+
+Accédez au dossier de l’application :
+```
+cd Test_cycle_TDD/app
+```
+
+Installez les dépendances :
+```
+pnpm install
+```
+
+Lancez l’application en mode développement :
+```
+pnpm run dev
+```
+
+Ouvrez votre navigateur à l’adresse indiquée par Vite (par défaut : http://localhost:5173)
+
+## Exécution des tests
+
+Lancer tous les tests unitaires et d’intégration avec rapport de couverture:
+```
+pnpm run test
+```
+
+Les rapports sont générés dans app/coverage et envoyés automatiquement sur Codecov via GitHub Actions.
+
+## Documentation technique
+
+La documentation est générée automatiquement avec JSDoc à chaque build CI/CD.
+
+Pour la générer manuellement :
+```
+cd app  
+pnpm run doc
+```

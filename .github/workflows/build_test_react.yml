@@ -25,6 +25,9 @@ jobs:
         with:
           version: 10
 
+      - name: Generate JSDoc
+        run: cd app && pnpm run doc
+
       - name: Install, Build and Test
         run: |
           cd app
