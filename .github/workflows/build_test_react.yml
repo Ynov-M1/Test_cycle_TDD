@@ -32,6 +32,12 @@ jobs:
           pnpm run build
           pnpm test
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: app/coverage/lcov.info
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
