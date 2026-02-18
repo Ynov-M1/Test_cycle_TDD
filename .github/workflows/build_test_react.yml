@@ -26,11 +26,12 @@ jobs:
           version: 9
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: app
+        run: |
+          cd app
+          pnpm install --frozen-lockfile
 
       - name: Build and Test
         run: |
+          cd app
           pnpm run build --if-present
           pnpm test
-        working-directory: app
