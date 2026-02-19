@@ -44,8 +44,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: app
-          start: pnpm run preview
-          wait-on: 'http://localhost:4173/Test_cycle_TDD/'
+          start: pnpm dev
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
