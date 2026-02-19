@@ -62,3 +62,13 @@ Pour la générer manuellement :
 cd app  
 pnpm run doc
 ```
+
+## Gestion de l’état global des utilisateurs
+
+L’application utilise un état global pour stocker la liste des utilisateurs (persons).
+
+L’état est remonté vers App.jsx (lift state up) afin que toutes les pages puissent accéder à la liste mise à jour.
+
+Lorsque le formulaire d’inscription est soumis, le nouvel utilisateur est ajouté à cet état global et persisté dans localStorage.
+
+Une écoute sur l’événement storage permet de synchroniser l’état entre plusieurs onglets/fenêtres : si un utilisateur est ajouté dans un onglet, la liste se met à jour automatiquement dans les autres.

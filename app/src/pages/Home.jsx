@@ -1,16 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-export default function Home() {
-    const [persons, setPersons] = useState([]);
+export default function Home({persons}) {
     const navigate = useNavigate();
-
-    useEffect(() => {
-        // Récupérer les utilisateurs depuis le localStorage
-        const storedPersons = JSON.parse(localStorage.getItem('persons')) || [];
-        setPersons(storedPersons);
-    }, []);
 
     const handleGoToForm = () => {
         navigate('/register');
@@ -26,7 +19,7 @@ export default function Home() {
                 </button>
                 <div className="user-table-container">
                     <h3>Liste des utilisateurs inscrits</h3>
-                    {persons.length > 0 && (
+                    {persons.length > 0 ? (
                         <ul className="user-list">
                             {persons.map((person, index) => (
                                 <li key={index}>
@@ -34,6 +27,8 @@ export default function Home() {
                                 </li>
                             ))}
                         </ul>
+                    ) : (
+                        <p>Aucun utilisateur inscrit pour l'instant.</p>
                     )}
                 </div>
             </div>

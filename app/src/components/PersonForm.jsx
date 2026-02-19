@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './PersonForm.css'
 
-export default function PersonForm() {
+export default function PersonForm({addPerson}) {
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
@@ -68,10 +68,7 @@ export default function PersonForm() {
                 city: form.city
             }
             validatePerson(person)
-            const stored = localStorage.getItem('persons')
-            const persons = stored ? JSON.parse(stored) : []
-            persons.push(person)
-            localStorage.setItem('persons', JSON.stringify(persons))
+            addPerson(person);
             toast.success("Enregistré avec succès !")
             setForm({ firstName: '', lastName: '', email: '', birthDate: '', zip: '', city: '' })
             setErrors({})
