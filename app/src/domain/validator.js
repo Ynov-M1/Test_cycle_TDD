@@ -43,11 +43,11 @@ export function validatePerson(person) {
 
 /**
  * Validates a person's age based on birth date.
- * Rejects if under 18 years old.
+ * Rejects if under 18 years old, in the future, or too far in the past.
  * @param {Date} birthDate - Date of birth
  * @returns {boolean} Returns true if age is 18 or older
  * @throws {Error} UNDERAGE if age < 18
- * @throws {TypeError} INVALID_DATE if birthDate is not a valid Date
+ * @throws {TypeError} INVALID_DATE if birthDate is not a valid Date Object or is before 1900
  * @throws {Error} FUTURE_DATE if birthDate is in the future
  */
 export function validateAge(birthDate) {
@@ -57,6 +57,9 @@ export function validateAge(birthDate) {
 
     const now = new Date();
     if (birthDate > now) throw new Error("FUTURE_DATE");
+
+    const year = birthDate.getFullYear();
+    if (year < 1900) throw new Error("INVALID_DATE")
 
     const age = calculateAge({birth: birthDate});
     if (age < 18) throw new Error("UNDERAGE");
@@ -121,7 +124,12 @@ export function validateName(name, type = "firstName") {
  * @throws {Error} Throws "INVALID_EMAIL" if email format is incorrect
  */
 export function validateEmail(email) {
-    if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (typeof email !== "string") {
+        throw new Error("INVALID_EMAIL");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!emailRegex.test(email.trim())) {
         throw new Error("INVALID_EMAIL");
     }
     return true;
