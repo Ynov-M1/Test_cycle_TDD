@@ -1,7 +1,6 @@
 {
   "source": {
-    "include": ["src/domain"],
-    "includePattern": ".js$"
+    "include": ["src"]
   },
   "opts": {
     "destination": "docs"

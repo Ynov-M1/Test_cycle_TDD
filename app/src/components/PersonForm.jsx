@@ -5,6 +5,20 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './PersonForm.css'
 
+/**
+ * PersonForm Component
+ *
+ * A form for registering a person. Handles field validation and submission.
+ * Displays validation errors and success notifications using react-toastify.
+ *
+ * @module PersonForm
+ * @component
+ *
+ * @param {Object} props
+ * @param {function(Object): void} props.addPerson - Callback function to add a person object to parent state or storage
+ *
+ * @returns {JSX.Element} The rendered registration form
+ */
 export default function PersonForm({addPerson}) {
     const [form, setForm] = useState({
         firstName: '',
@@ -17,6 +31,14 @@ export default function PersonForm({addPerson}) {
 
     const [errors, setErrors] = useState({})
 
+    /**
+     * Validate a single form field and update the error state.
+     * @module PersonForm
+     * @function validateField
+     * @private
+     * @param {string} name - Field name
+     * @param {string} value - Field value
+     */
     const validateField = (name, value) => {
         if (!value) {
             setErrors(prev => ({ ...prev, [name]: '' }))
@@ -50,12 +72,26 @@ export default function PersonForm({addPerson}) {
         }
     }
 
+    /**
+     * Handle form field changes.
+     * @module PersonForm
+     * @function handleChange
+     * @private
+     * @param {Event} e - Input change event
+     */
     const handleChange = (e) => {
         const { name, value } = e.target
         setForm(prev => ({ ...prev, [name]: value }))
         validateField(name, value)
     }
 
+    /**
+     * Handle form submission.
+     * @module PersonForm
+     * @function handleSubmit
+     * @private
+     * @param {Event} e - Submit event
+     */
     const handleSubmit = (e) => {
         e.preventDefault()
         try {

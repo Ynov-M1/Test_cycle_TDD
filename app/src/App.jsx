@@ -3,15 +3,25 @@ import { useState, useEffect } from "react"
 import Home from "./pages/Home"
 import Register from "./pages/Register"
 
+/**
+ * Main App Component
+ *
+ * Handles routing, state management for registered persons, and localStorage persistence.
+ *
+ * @module App
+ * @component
+ * @returns {JSX.Element} The main application component with routes
+ */
 function App() {
     const [persons, setPersons] = useState([]);
 
+    //Load stored persons from localStorage on mount. //
     useEffect(() => {
         const stored = localStorage.getItem('persons');
         if (stored) setPersons(JSON.parse(stored));
     }, []);
 
-    // Manage changes from other tabs/windows
+    //Sync persons state when localStorage changes in other tabs/windows. //
     useEffect(() => {
         const handleStorage = (e) => {
             if (e.key === 'persons') {
@@ -22,6 +32,13 @@ function App() {
         return () => window.removeEventListener('storage', handleStorage);
     }, []);
 
+    /**
+     * Add a person to the state and persist to localStorage.
+     * @module App
+     * @function addPerson
+     * @private
+     * @param {Object} person - Person object to add
+     */
     const addPerson = (person) => {
         const newPersons = [...persons, person];
         setPersons(newPersons);

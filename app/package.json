@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --coverage",
-    "doc": "jsdoc -R ../README.md -c jsdoc.json -r -d ./public/docs",
+    "doc": "jsdoc -R ../README.md -c jsdoc.json -r -d ./public/docs --private",
     "cypress": "cypress open"
   },
   "dependencies": {
