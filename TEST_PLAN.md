@@ -2,12 +2,13 @@
 
 ## 1. Objectif
 
-Ce document décrit le plan de tests pour valider les modules de validation (`validator.js`, `module.js`, `errorMessages.js`) et le formulaire `PersonForm`.  
+Ce document décrit le plan de tests pour valider les modules de validation (validator.js, errorMessages.js) et le composant PersonForm, ainsi que les parcours utilisateurs via E2E. 
 
 Objectifs principaux :
 - Vérifier toutes les validations unitaires.
 - Vérifier l’affichage des erreurs dans le DOM.
 - Vérifier le comportement global du formulaire : activation/désactivation du bouton, sauvegarde dans `localStorage`, affichage du toast de succès.
+- Vérifier la persistance des données et la navigation entre les pages (SPA).
 
 ---
 
@@ -30,6 +31,12 @@ Objectifs principaux :
 - Sauvegarde dans `localStorage`
 - Affichage du toast de succès
 - Vérification des messages d’erreur
+- 
+### 2..3 End-to-End (E2E) Tests
+- Navigation multi-pages (/ et /register)
+- Scénarios Nominal et Erreur avec persistance des données
+- Vérification des messages d’erreur côté UI
+- Vérification du compteur et de la liste d’utilisateurs après chaque action
 
 ---
 
@@ -92,8 +99,29 @@ Objectifs principaux :
 
 ---
 
-### 3.3 Objectifs de couverture
+# 3.3 Tests End-to-End (E2E)
+
+## Scénario Nominal
+
+- Accueil (/) → vérifier compteur = 0 et liste vide ([data-cy=user-count], [data-cy=user-list])
+- Cliquer sur “Inscription” → navigation vers /register
+- Remplir formulaire avec données valides
+- Soumission → toast visible (#success-toast)
+- Retour à l’Accueil → compteur = 1 et nouvel utilisateur affiché
+
+## Scénario d’Erreur
+
+- Accueil avec 1 utilisateur existant
+- Navigation vers /register
+- Tentatives d’ajout invalide :
+  - Champs vides → bouton submit désactivé
+  - Email déjà utilisé → message "Cet email est déjà utilisé"
+  - Date < 1900 → message "Date de naissance trop ancienne"
+- Retour à l'accueil → compteur = 1
+
+### 3.4 Objectifs de couverture
 
 - Couverture maximale **unit tests** : toutes les validations.
 - Couverture maximale **integration tests** : tous les flux utilisateurs, erreurs, corrections et Soumission.
 - Vérification du toast et de `localStorage`.
+- Couverture E2E : navigation SPA, persistance des données, toast et messages d’erreur affichés

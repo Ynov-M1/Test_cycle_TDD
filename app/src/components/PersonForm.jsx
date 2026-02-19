@@ -105,7 +105,9 @@ export default function PersonForm({addPerson}) {
             }
             validatePerson(person)
             addPerson(person);
-            toast.success("Enregistré avec succès !")
+            toast.success("Enregistré avec succès !", {
+                toastId: "success-toast"
+            });
             setForm({ firstName: '', lastName: '', email: '', birthDate: '', zip: '', city: '' })
             setErrors({})
         } catch (err) {
@@ -113,11 +115,12 @@ export default function PersonForm({addPerson}) {
             const key =
                 err.message.includes('FIRST_NAME') ? 'firstName' :
                     err.message.includes('LAST_NAME') ? 'lastName' :
-                        err.message.includes('EMAIL') ? 'email' :
-                            err.message.includes('ZIP') ? 'zip' :
-                                err.message.includes('CITY') ? 'city' :
-                                    err.message.includes('UNDERAGE') ? 'birthDate' :
-                                        err.message.includes('FUTURE_DATE') ? 'birthDate' :'form'
+                        err.message.includes('INVALID_EMAIL') ? 'email' :
+                            err.message.includes('EMAIL_ALREADY_EXISTS') ? 'email' :
+                                err.message.includes('ZIP') ? 'zip' :
+                                    err.message.includes('CITY') ? 'city' :
+                                        err.message.includes('UNDERAGE') ? 'birthDate' :
+                                            err.message.includes('FUTURE_DATE') ? 'birthDate' :'form'
             /* istanbul ignore next */
             setErrors({ [key]: err.message })
         }
@@ -132,6 +135,7 @@ export default function PersonForm({addPerson}) {
             <form onSubmit={handleSubmit} className="person-form">
                 <div className="form-group">
                     <input
+                        data-cy="firstName"
                         name="firstName"
                         aria-label="firstName"
                         placeholder="Prénom"
@@ -144,6 +148,7 @@ export default function PersonForm({addPerson}) {
 
                 <div className="form-group">
                     <input
+                        data-cy="lastName"
                         name="lastName"
                         aria-label="lastName"
                         placeholder="Nom"
@@ -156,6 +161,7 @@ export default function PersonForm({addPerson}) {
 
                 <div className="form-group">
                     <input
+                        data-cy="birthDate"
                         type="date"
                         name="birthDate"
                         data-testid="birthDate"
@@ -168,6 +174,7 @@ export default function PersonForm({addPerson}) {
 
                 <div className="form-group">
                     <input
+                        data-cy="zip"
                         name="zip"
                         aria-label="zip"
                         placeholder="Code Postal"
@@ -180,6 +187,7 @@ export default function PersonForm({addPerson}) {
 
                 <div className="form-group">
                     <input
+                        data-cy="city"
                         name="city"
                         aria-label="city"
                         placeholder="Ville"
@@ -192,6 +200,7 @@ export default function PersonForm({addPerson}) {
 
                 <div className="form-group">
                     <input
+                        data-cy="email"
                         name="email"
                         aria-label="email"
                         placeholder="Email"
@@ -202,13 +211,12 @@ export default function PersonForm({addPerson}) {
                     {errors.email && <span className="error">{getErrorMessage(errors.email)}</span>}
                 </div>
 
-                <button type="submit" disabled={isDisabled}>
+                <button data-cy="submit" type="submit" disabled={isDisabled}>
                     Soumettre
                 </button>
             </form>
 
             <ToastContainer
-                data-testid="toast"
                 position="top-right"
                 autoClose={3000}
                 hideProgressBar={false}

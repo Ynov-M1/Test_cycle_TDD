@@ -3,9 +3,11 @@
 Ce projet est un exemple d’application React configurée avec Vite, intégrant :
 
 - Tests unitaires et d’intégration avec Jest et React Testing Library
+- Tests end-to-end (E2E) avec Cypress
 - Suivi de couverture de code via Codecov
 - Génération automatique de documentation technique avec JSDoc
 - Workflow CI/CD GitHub Actions pour build, tests et déploiement sur GitHub Pages
+- Gestion d’état global pour la liste des utilisateurs et persistance via localStorage
 
 ## Liens rapides
 
@@ -44,14 +46,55 @@ pnpm run dev
 
 Ouvrez votre navigateur à l’adresse indiquée par Vite (par défaut : http://localhost:5173)
 
-## Exécution des tests
+L’application utilise React Router pour gérer plusieurs pages:
+
+- Page d’accueil (/) : affiche un message de bienvenue, le compteur d’utilisateurs inscrits, et la liste des utilisateurs avec leur prénom et nom.
+- Page Formulaire (/register) : contient le formulaire d’inscription.
+
+L’état global de la liste des utilisateurs (persons) est remonté vers App.jsx (lift state up) pour que toutes les pages puissent accéder à la liste mise à jour.
+
+La liste des utilisateurs est persistée dans localStorage et synchronisée entre plusieurs onglets/fenêtres via un écouteur storage.
+
+## Fonctionnalités clés
+
+- Validation complète côté client : champs requis, email valide, code postal, ville, âge ≥ 18 ans, date de naissance non future et pas trop ancienne (>1900)
+- Gestion des emails en double : le formulaire affiche une erreur si un email existe déjà
+- Notifications toast (react-toastify) pour confirmer l’inscription réussie
+- Sélecteurs data-cy robustes pour les tests E2E (firstName, lastName, email, birthDate, zip, city, submit, toast, back-home, user-count, user-list)
+
+## Tests unitaires et d’intégration
 
 Lancer tous les tests unitaires et d’intégration avec rapport de couverture:
 ```
 pnpm run test
 ```
 
+Les tests couvrent : validation des champs, intégration du formulaire et affichage des erreurs.
+
 Les rapports sont générés dans app/coverage et envoyés automatiquement sur Codecov via GitHub Actions.
+
+## Tests End-to-End (Cypress)
+
+Le projet contient des scénarios E2E vérifiant la navigation et la cohérence des données.
+
+### Scénario Nominal
+
+- Navigation vers l’Accueil (/) → Vérifier 0 utilisateur inscrit et liste vide
+- Cliquer sur “Inscription” → Navigation vers /register
+- Ajouter un nouvel utilisateur valide → Vérifier toast de succès
+- Retour à l’Accueil → Vérifier 1 utilisateur inscrit et affichage correct dans la liste
+
+### Scénario d’Erreur
+
+- Partant de 1 utilisateur déjà inscrit
+- Navigation vers le formulaire → Tenter un ajout invalide (champ vide, email déjà utilisé, date trop ancienne)
+- Vérifier l’affichage des messages d’erreur correspondants (INVALID_DATE, EMAIL_ALREADY_EXISTS, etc.)
+- Retour à l’Accueil → Vérifier que la liste et le compteur restent inchangés
+
+### Lancer les tests E2E
+```
+pnpm run cypress
+```
 
 ## Documentation technique
 
@@ -63,12 +106,9 @@ cd app
 pnpm run doc
 ```
 
-## Gestion de l’état global des utilisateurs
+## Pipeline CI/CD
 
-L’application utilise un état global pour stocker la liste des utilisateurs (persons).
-
-L’état est remonté vers App.jsx (lift state up) afin que toutes les pages puissent accéder à la liste mise à jour.
-
-Lorsque le formulaire d’inscription est soumis, le nouvel utilisateur est ajouté à cet état global et persisté dans localStorage.
-
-Une écoute sur l’événement storage permet de synchroniser l’état entre plusieurs onglets/fenêtres : si un utilisateur est ajouté dans un onglet, la liste se met à jour automatiquement dans les autres.
+- Build de l’application via Vite
+- Exécution des tests unitaires, d’intégration et E2E (Cypress headless)
+- Upload des rapports de couverture vers Codecov
+- Déploiement sur GitHub Pages si tous les tests passentement storage permet de synchroniser l’état entre plusieurs onglets/fenêtres : si un utilisateur est ajouté dans un onglet, la liste se met à jour automatiquement dans les autres.

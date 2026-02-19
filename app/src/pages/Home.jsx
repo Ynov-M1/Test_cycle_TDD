@@ -32,14 +32,14 @@ export default function Home({persons}) {
         <div className="home-container">
             <div className="card">
                 <h1>Bienvenue</h1>
-                <p>Nombre d'utilisateurs inscrits : <strong>{persons.length}</strong></p>
-                <button onClick={handleGoToForm}>
+                <p>Nombre d'utilisateurs inscrits : <strong data-cy="user-count">{persons.length}</strong></p>
+                <button data-cy="nav-register" onClick={handleGoToForm}>
                     Inscription
                 </button>
                 <div className="user-table-container">
                     <h3>Liste des utilisateurs inscrits</h3>
                     {persons.length > 0 ? (
-                        <ul className="user-list">
+                        <ul data-cy="user-list" className="user-list">
                             {persons.map((person, index) => (
                                 <li key={index}>
                                     {person.firstName} {person.lastName}
@@ -47,7 +47,7 @@ export default function Home({persons}) {
                             ))}
                         </ul>
                     ) : (
-                        <p>Aucun utilisateur inscrit pour l'instant.</p>
+                        <p data-cy="no-users">Aucun utilisateur inscrit pour l'instant.</p>
                     )}
                 </div>
             </div>

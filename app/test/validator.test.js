@@ -57,9 +57,9 @@ describe("validateAge Unit Test Suites", () => {
         expect(() => validateAge(future)).toThrow("FUTURE_DATE");
     });
 
-    it("should throw INVALID_DATE if birthDate is before 1900", () => {
+    it("should throw BIRTHDATE_TOO_OLD if birthDate is before 1900", () => {
         const ancient = new Date(1800, 0, 1);
-        expect(() => validateAge(ancient)).toThrow("INVALID_DATE");
+        expect(() => validateAge(ancient)).toThrow("BIRTHDATE_TOO_OLD");
     });
 
     it("should accept adult", () => {

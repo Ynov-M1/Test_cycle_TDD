@@ -21,7 +21,7 @@ export default function Register({addPerson}) {
         <div className="register-container">
             <PersonForm addPerson={addPerson}/>
             <Link to="/">
-                <button className="back-button">Retour à l'accueil</button>
+                <button data-cy="back-home" className="back-button">Retour à l'accueil</button>
             </Link>
         </div>
     )
