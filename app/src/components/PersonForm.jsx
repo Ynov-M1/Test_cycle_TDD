@@ -68,7 +68,10 @@ export default function PersonForm() {
                 city: form.city
             }
             validatePerson(person)
-            localStorage.setItem('person', JSON.stringify(person))
+            const stored = localStorage.getItem('persons')
+            const persons = stored ? JSON.parse(stored) : []
+            persons.push(person)
+            localStorage.setItem('persons', JSON.stringify(persons))
             toast.success("Enregistré avec succès !")
             setForm({ firstName: '', lastName: '', email: '', birthDate: '', zip: '', city: '' })
             setErrors({})

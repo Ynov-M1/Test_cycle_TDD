@@ -144,8 +144,11 @@ describe('PersonForm Integration Tests', () => {
             expect(toast).toBeInTheDocument();
             expect(toast).toHaveTextContent(/enregistré avec succès/i);
 
-            const saved = JSON.parse(localStorage.getItem('person'));
-            expect(saved).toBeTruthy();
+            const savedPersons = JSON.parse(localStorage.getItem('persons'));
+            expect(savedPersons).toBeTruthy();
+            expect(savedPersons.length).toBeGreaterThan(0);
+
+            const saved = savedPersons[savedPersons.length - 1];
             expect(saved.firstName).toBe('Théo');
             expect(saved.lastName).toBe('Lafond');
             expect(saved.email).toBe('theo@example.com');
@@ -155,3 +158,33 @@ describe('PersonForm Integration Tests', () => {
         });
     });
 });
+
+describe('PersonForm localStorage pre-existing users', () => {
+    test('adds new user to existing users in localStorage', async () => {
+        localStorage.setItem('persons', JSON.stringify([
+            { firstName: 'Alice', lastName: 'Dupont', email: 'alice@example.com', birthDate: '1990-01-01', zip: '75000', city: 'Paris' }
+        ]));
+
+        const user = userEvent.setup();
+        render(<PersonForm />);
+
+        await user.type(screen.getByRole('textbox', { name: /firstName/i }), 'Théo');
+        await user.type(screen.getByRole('textbox', { name: /lastName/i }), 'Lafond');
+        await user.type(screen.getByRole('textbox', { name: /email/i }), 'theo@example.com');
+        await user.type(screen.getByRole('textbox', { name: /zip/i }), '03100');
+        await user.type(screen.getByRole('textbox', { name: /city/i }), 'Montluçon');
+        await user.type(screen.getByTestId('birthDate'), '2001-02-09');
+
+        const submitBtn = screen.getByRole('button', { name: /soumettre/i });
+        expect(submitBtn).not.toBeDisabled();
+        await user.click(submitBtn);
+
+        await waitFor(() => {
+            const savedPersons = JSON.parse(localStorage.getItem('persons'));
+            expect(savedPersons).toHaveLength(2);
+            expect(savedPersons[0].firstName).toBe('Alice');
+            expect(savedPersons[1].firstName).toBe('Théo');
+        });
+    });
+});
+
