@@ -172,6 +172,7 @@ export default function PersonForm({addPerson}) {
             </form>
 
             <ToastContainer
+                data-testid="toast"
                 position="top-right"
                 autoClose={3000}
                 hideProgressBar={false}

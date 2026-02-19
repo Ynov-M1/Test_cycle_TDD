@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1771495401772" clover="3.2.0">
-  <project timestamp="1771495401772" name="All files">
-    <metrics statements="105" coveredstatements="105" conditionals="102" coveredconditionals="102" methods="22" coveredmethods="22" elements="229" coveredelements="229" complexity="0" loc="105" ncloc="105" packages="3" files="4" classes="4"/>
+<coverage generated="1771499481081" clover="3.2.0">
+  <project timestamp="1771499481081" name="All files">
+    <metrics statements="102" coveredstatements="102" conditionals="100" coveredconditionals="100" methods="22" coveredmethods="22" elements="224" coveredelements="224" complexity="0" loc="102" ncloc="102" packages="3" files="4" classes="4"/>
     <package name="components">
-      <metrics statements="46" coveredstatements="46" conditionals="29" coveredconditionals="29" methods="14" coveredmethods="14"/>
+      <metrics statements="43" coveredstatements="43" conditionals="27" coveredconditionals="27" methods="14" coveredmethods="14"/>
       <file name="PersonForm.jsx" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\app\src\components\PersonForm.jsx">
-        <metrics statements="46" coveredstatements="46" conditionals="29" coveredconditionals="29" methods="14" coveredmethods="14"/>
+        <metrics statements="43" coveredstatements="43" conditionals="27" coveredconditionals="27" methods="14" coveredmethods="14"/>
         <line num="9" count="179" type="stmt"/>
         <line num="18" count="179" type="stmt"/>
         <line num="20" count="179" type="stmt"/>
@@ -38,20 +38,17 @@
         <line num="62" count="2" type="stmt"/>
         <line num="70" count="2" type="stmt"/>
         <line num="71" count="2" type="stmt"/>
-        <line num="72" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="72" count="2" type="stmt"/>
         <line num="73" count="2" type="stmt"/>
         <line num="74" count="2" type="stmt"/>
-        <line num="75" count="2" type="stmt"/>
-        <line num="76" count="2" type="stmt"/>
-        <line num="77" count="2" type="stmt"/>
-        <line num="94" count="179" type="cond" truecount="7" falsecount="0"/>
-        <line num="96" count="179" type="stmt"/>
-        <line num="107" count="4" type="stmt"/>
-        <line num="119" count="4" type="stmt"/>
-        <line num="131" count="6" type="stmt"/>
-        <line num="143" count="5" type="stmt"/>
-        <line num="155" count="5" type="stmt"/>
-        <line num="167" count="6" type="stmt"/>
+        <line num="91" count="179" type="cond" truecount="7" falsecount="0"/>
+        <line num="93" count="179" type="stmt"/>
+        <line num="104" count="4" type="stmt"/>
+        <line num="116" count="4" type="stmt"/>
+        <line num="128" count="6" type="stmt"/>
+        <line num="140" count="5" type="stmt"/>
+        <line num="152" count="5" type="stmt"/>
+        <line num="164" count="6" type="stmt"/>
       </file>
     </package>
     <package name="domain">
