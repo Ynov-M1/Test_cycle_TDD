@@ -73,12 +73,7 @@ describe("PersonForm field validation", () => {
 describe('PersonForm Integration Tests', () => {
     test('chaotic user flow: invalid inputs, corrections, resubmissions', async () => {
         const user = userEvent.setup();
-        const mockAddPerson = jest.fn((person) => {
-            const stored = JSON.parse(localStorage.getItem('persons') || '[]');
-            localStorage.setItem('persons', JSON.stringify([...stored, person]));
-        });
-
-        render(<PersonForm addPerson={mockAddPerson} />);
+        const { mockAddPerson } = renderPersonForm();
 
         const firstName = screen.getByRole('textbox', {name: /firstname/i});
         const lastName = screen.getByRole('textbox', {name: /lastname/i});
@@ -171,12 +166,7 @@ describe('PersonForm localStorage pre-existing users', () => {
         ]));
 
         const user = userEvent.setup();
-        const mockAddPerson = jest.fn((person) => {
-            const stored = JSON.parse(localStorage.getItem('persons') || '[]');
-            localStorage.setItem('persons', JSON.stringify([...stored, person]));
-        });
-
-        render(<PersonForm addPerson={mockAddPerson} />);
+        const { mockAddPerson } = renderPersonForm();
 
         await user.type(screen.getByRole('textbox', { name: /firstName/i }), 'Théo');
         await user.type(screen.getByRole('textbox', { name: /lastName/i }), 'Lafond');
@@ -197,4 +187,14 @@ describe('PersonForm localStorage pre-existing users', () => {
         });
     });
 });
+
+const renderPersonForm = () => {
+    const mockAddPerson = jest.fn((person) => {
+        const stored = JSON.parse(localStorage.getItem('persons') || '[]');
+        localStorage.setItem('persons', JSON.stringify([...stored, person]));
+    });
+    render(<PersonForm addPerson={mockAddPerson} />);
+    return { mockAddPerson };
+};
+
 
