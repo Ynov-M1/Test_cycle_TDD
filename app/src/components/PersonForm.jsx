@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { validatePerson, validateAge, validateZipCode, validateCity, validateName, validateEmail } from '../domain/validator'
-import { getErrorMessage } from '../utils/errorMessages'
+import {errorMessages, getErrorMessage} from '../utils/errorMessages'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './PersonForm.css'
@@ -92,7 +92,7 @@ export default function PersonForm({addPerson}) {
      * @private
      * @param {Event} e - Submit event
      */
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         try {
             const person = {
@@ -104,7 +104,7 @@ export default function PersonForm({addPerson}) {
                 city: form.city
             }
             validatePerson(person)
-            addPerson(person);
+            await addPerson(person)
             toast.success("Enregistré avec succès !", {
                 toastId: "success-toast"
             });
@@ -112,15 +112,17 @@ export default function PersonForm({addPerson}) {
             setErrors({})
         } catch (err) {
             /* istanbul ignore next */
-            const key =
-                err.message.includes('FIRST_NAME') ? 'firstName' :
-                    err.message.includes('LAST_NAME') ? 'lastName' :
-                        err.message.includes('INVALID_EMAIL') ? 'email' :
-                            err.message.includes('EMAIL_ALREADY_EXISTS') ? 'email' :
-                                err.message.includes('ZIP') ? 'zip' :
-                                    err.message.includes('CITY') ? 'city' :
-                                        err.message.includes('UNDERAGE') ? 'birthDate' :
-                                            err.message.includes('FUTURE_DATE') ? 'birthDate' :'form'
+            let key = 'form'
+            /* istanbul ignore next */
+            if (err.message.includes('SERVER_ERROR')) {
+                toast.error(errorMessages.SERVER_ERROR, { toastId: "server-error-toast" })
+            } else if (err.message.includes('FIRST_NAME')) key = 'firstName'
+            else if (err.message.includes('LAST_NAME')) key = 'lastName'
+            else if (err.message.includes('INVALID_EMAIL') || err.message.includes('EMAIL_ALREADY_EXISTS')) key = 'email'
+            else if (err.message.includes('ZIP')) key = 'zip'
+            else if (err.message.includes('CITY')) key = 'city'
+            else if (err.message.includes('UNDERAGE') || err.message.includes('FUTURE_DATE')) key = 'birthDate'
+
             /* istanbul ignore next */
             setErrors({ [key]: err.message })
         }

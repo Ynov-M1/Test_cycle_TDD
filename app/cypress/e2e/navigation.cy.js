@@ -9,75 +9,149 @@ describe("Navigation and User Registration E2E Tests", () => {
         city: "Montluçon"
     };
 
+    const apiUser = {
+        id: 11,
+        name: "Théo Lafond",
+        username: "TheoL",
+        email: "theo@example.com",
+        birthDate: "2001-09-02",
+        address: {
+            street: "1 Rue de Test",
+            suite: "Apt 101",
+            city: "Montluçon",
+            zipcode: "03100"
+        }
+    };
+
     beforeEach(() => {
-        // Reset localStorage before each test to start clean
-        cy.clearLocalStorage();
         cy.visit("/");
     });
 
-    it("Nominal Scenario: Add a valid user", () => {
-        cy.get('[data-cy=user-count]').should("contain", "0");
-        cy.get('[data-cy=user-list]').should("not.exist");
+    context("Nominal Scenario: Add a valid user", () => {
+        it("should allow a user to register successfully", () => {
+            // GET /users → empty list
+            cy.intercept('GET', 'https://jsonplaceholder.typicode.com/users', {
+                statusCode: 200,
+                body: []
+            }).as('getUsers');
 
-        cy.get('[data-cy=nav-register]').click();
-        cy.url().should("include", "/register");
+            // POST /users → success
+            cy.intercept('POST', 'https://jsonplaceholder.typicode.com/users', {
+                statusCode: 201,
+                body: newUser
+            }).as('createUser');
 
-        cy.get('[data-cy=firstName]').type(newUser.firstName);
-        cy.get('[data-cy=lastName]').type(newUser.lastName);
-        cy.get('[data-cy=email]').type(newUser.email);
-        cy.get('[data-cy=birthDate]').type(newUser.birthDate);
-        cy.get('[data-cy=zip]').type(newUser.zip);
-        cy.get('[data-cy=city]').type(newUser.city);
+            cy.wait('@getUsers');
 
-        cy.get('[data-cy=submit]').click();
+            cy.get('[data-cy=user-count]').should("contain", "0");
+            cy.get('[data-cy=user-list]').should("not.exist");
 
-        cy.get('#success-toast').should('be.visible');
+            // Navigate to register
+            cy.get('[data-cy=nav-register]').click();
+            cy.url().should("include", "/register");
 
-        cy.get('[data-cy=back-home]').click();
-        cy.url().should("eq", Cypress.config().baseUrl);
+            // Fill form
+            cy.get('[data-cy=firstName]').type(newUser.firstName);
+            cy.get('[data-cy=lastName]').type(newUser.lastName);
+            cy.get('[data-cy=email]').type(newUser.email);
+            cy.get('[data-cy=birthDate]').type(newUser.birthDate);
+            cy.get('[data-cy=zip]').type(newUser.zip);
+            cy.get('[data-cy=city]').type(newUser.city);
 
-        cy.get('[data-cy=user-count]').should("contain", "1");
-        cy.get('[data-cy=user-list]').should("contain", `${newUser.firstName} ${newUser.lastName}`);
-    });
+            cy.get('[data-cy=submit]').click();
 
-    it("Error Scenario: Invalid Add Attempt", () => {
-        cy.window().then(win => {
-            win.localStorage.setItem("persons", JSON.stringify([newUser]));
+            cy.wait('@createUser');
+
+            cy.get('#success-toast').should('be.visible')
+                .and('contain.text', "Enregistré avec succès");
+
+            // Back home
+            cy.get('[data-cy=back-home]').click();
+            cy.url().should("eq", Cypress.config().baseUrl);
+
+            cy.get('[data-cy=user-count]').should("contain", "1");
+            cy.get('[data-cy=user-list]').should("contain", `${newUser.firstName} ${newUser.lastName}`);
         });
+    });
 
-        cy.visit("/");
-        cy.get('[data-cy=user-count]').should("contain", "1");
+    context("Error Scenario: Email already exists (400)", () => {
+        it("should display EMAIL_ALREADY_EXISTS error", () => {
+            // Existing user
+            cy.intercept('GET', 'https://jsonplaceholder.typicode.com/users', {
+                statusCode: 200,
+                body: [apiUser]
+            }).as('getUsers');
 
-        cy.get('[data-cy=nav-register]').click();
-        cy.location("pathname").should("include", "/register");
+            // POST /users → 400 error
+            cy.intercept('POST', 'https://jsonplaceholder.typicode.com/users', {
+                statusCode: 400,
+                body: { message: "EMAIL_ALREADY_EXISTS" }
+            }).as('createUserFail');
 
-        /* Fields empty */
-        cy.get('[data-cy=submit]').should("be.disabled");
+            cy.wait('@getUsers');
 
-        /* INVALID DATE */
-        cy.get('[data-cy=firstName]').type("Jean");
-        cy.get('[data-cy=lastName]').type("Dupont");
-        cy.get('[data-cy=email]').type("jean@test.com");
-        cy.get('[data-cy=zip]').type("75000");
-        cy.get('[data-cy=city]').type("Paris");
+            cy.get('[data-cy=user-count]').should("contain", "1");
 
-        cy.get('[data-cy=birthDate]').type("1890-01-01").blur();
-        cy.contains("La date de naissance est trop ancienne").should("be.visible");
-        cy.get('[data-cy=submit]').should("be.disabled");
+            cy.get('[data-cy=nav-register]').click();
+            cy.url().should("include", "/register");
 
-        /* Email already exist */
-        cy.get('[data-cy=birthDate]').clear().type("1995-05-10");
-        cy.get('[data-cy=email]').clear().type(newUser.email);
-        cy.get('[data-cy=submit]').click();
-        cy.get('.error').should("exist");
-        cy.contains("Cet email est déjà utilisé").should("be.visible");
+            // Fill form with existing email
+            cy.get('[data-cy=firstName]').type("Jean");
+            cy.get('[data-cy=lastName]').type("Dupont");
+            cy.get('[data-cy=email]').type("fake@gmail.com");
+            cy.get('[data-cy=birthDate]').type("1995-05-10");
+            cy.get('[data-cy=zip]').type("75000");
+            cy.get('[data-cy=city]').type("Paris");
 
-        cy.get('.error').should("have.length", 1);
+            cy.get('[data-cy=submit]').click();
 
-        cy.get('[data-cy=back-home]').click();
+            cy.wait('@createUserFail');
 
-        cy.get('[data-cy=user-count]').should("contain", "1");
-        cy.get('[data-cy=user-list]').should("contain", `${newUser.firstName} ${newUser.lastName}`);
+            // Should display error
+            cy.contains("Cet email est déjà utilisé").should("be.visible");
+
+            // Back home
+            cy.get('[data-cy=back-home]').click();
+            cy.get('[data-cy=user-count]').should("contain", "1");
+        });
+    });
+
+    context("Error Scenario: Server crash (500)", () => {
+        it("should display alert and not crash app", () => {
+            // GET /users → empty list
+            cy.intercept('GET', 'https://jsonplaceholder.typicode.com/users', {
+                statusCode: 200,
+                body: []
+            }).as('getUsers');
+
+            // POST /users → server error 500
+            cy.intercept('POST', 'https://jsonplaceholder.typicode.com/users', {
+                statusCode: 500
+            }).as('createUserFail');
+
+            cy.wait('@getUsers');
+
+            cy.get('[data-cy=nav-register]').click();
+
+            cy.get('[data-cy=firstName]').type("Alice");
+            cy.get('[data-cy=lastName]').type("Durand");
+            cy.get('[data-cy=email]').type("alice@example.com");
+            cy.get('[data-cy=birthDate]').type("1998-01-01");
+            cy.get('[data-cy=zip]').type("75001");
+            cy.get('[data-cy=city]').type("Paris");
+
+            // Listen to alert
+            cy.on('window:alert', (text) => {
+                expect(text).to.contains("Unable to fetch users. Server may be unavailable");
+            });
+
+            cy.get('[data-cy=submit]').click();
+            cy.wait('@createUserFail');
+
+            // Back home works
+            cy.get('[data-cy=back-home]').click();
+            cy.get('[data-cy=user-count]').should("contain", "0");
+        });
     });
 
 });

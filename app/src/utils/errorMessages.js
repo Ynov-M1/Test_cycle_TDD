@@ -12,6 +12,7 @@
  * @property {string} INVALID_DATE - "La date de naissance est invalide",
  * @property {string} BIRTHDATE_TOO_OLD - "La date de naissance est trop ancienne",
  * @property {string} XSS_DETECTED - "Caractères interdits détectés"
+ * @property {string} SERVER_ERROR - "Serveur indisponible, réessayez plus tard"
  */
 export const errorMessages = {
     INVALID_FIRST_NAME: "Le prénom n'est pas valide",
@@ -24,7 +25,8 @@ export const errorMessages = {
     FUTURE_DATE: "La date de naissance ne peut pas être dans le futur",
     INVALID_DATE: "La date de naissance est invalide",
     BIRTHDATE_TOO_OLD: "La date de naissance est trop ancienne",
-    XSS_DETECTED: "Caractères interdits détectés"
+    XSS_DETECTED: "Caractères interdits détectés",
+    SERVER_ERROR: "Serveur indisponible, réessayez plus tard"
 };
 
 /**

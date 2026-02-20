@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
+import {toast, ToastContainer} from "react-toastify";
 
 /**
  * Home Component
@@ -15,7 +16,7 @@ import './Home.css';
  *
  * @returns {JSX.Element}
  */
-export default function Home({persons}) {
+export default function Home({persons, loading, serverError }) {
     const navigate = useNavigate();
 
     /**
@@ -28,11 +29,38 @@ export default function Home({persons}) {
         navigate('/register');
     };
 
+    if (serverError) {
+        if (!toast.isActive("server-error")) {
+            toast.error(serverError, {
+                toastId: "server-error",
+                autoClose: false,
+                closeOnClick: false,
+                draggable: false,
+                closeButton: false
+            });
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="home-container">
+                <div className="card">
+                    <h1>Bienvenue</h1>
+                    <p>Chargement des utilisateurs...</p>
+                </div>
+                <ToastContainer position="top-right"/>
+            </div>
+        );
+    }
+
     return (
         <div className="home-container">
             <div className="card">
                 <h1>Bienvenue</h1>
-                <p>Nombre d'utilisateurs inscrits : <strong data-cy="user-count">{persons.length}</strong></p>
+                <p>
+                    Nombre d'utilisateurs inscrits :{" "}
+                    <strong data-cy="user-count">{persons.length}</strong>
+                </p>
                 <button data-cy="nav-register" onClick={handleGoToForm}>
                     Inscription
                 </button>
@@ -42,7 +70,7 @@ export default function Home({persons}) {
                         <ul data-cy="user-list" className="user-list">
                             {persons.map((person, index) => (
                                 <li key={index}>
-                                    {person.firstName} {person.lastName}
+                                    {person.firstName} {person.lastName} ({person.email})
                                 </li>
                             ))}
                         </ul>
@@ -51,6 +79,7 @@ export default function Home({persons}) {
                     )}
                 </div>
             </div>
+            <ToastContainer position="top-right"/>
         </div>
     );
 }
