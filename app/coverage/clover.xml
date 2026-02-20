@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1771597032693" clover="3.2.0">
-  <project timestamp="1771597032693" name="All files">
-    <metrics statements="120" coveredstatements="120" conditionals="117" coveredconditionals="117" methods="25" coveredmethods="25" elements="262" coveredelements="262" complexity="0" loc="120" ncloc="120" packages="4" files="5" classes="5"/>
+<coverage generated="1771600086106" clover="3.2.0">
+  <project timestamp="1771600086106" name="All files">
+    <metrics statements="123" coveredstatements="123" conditionals="121" coveredconditionals="121" methods="25" coveredmethods="25" elements="269" coveredelements="269" complexity="0" loc="123" ncloc="123" packages="4" files="5" classes="5"/>
     <package name="components">
       <metrics statements="43" coveredstatements="43" conditionals="27" coveredconditionals="27" methods="14" coveredmethods="14"/>
       <file name="PersonForm.jsx" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\app\src\components\PersonForm.jsx">
@@ -123,9 +123,9 @@
       </file>
     </package>
     <package name="domain.services">
-      <metrics statements="13" coveredstatements="13" conditionals="15" coveredconditionals="15" methods="3" coveredmethods="3"/>
+      <metrics statements="16" coveredstatements="16" conditionals="19" coveredconditionals="19" methods="3" coveredmethods="3"/>
       <file name="personService.js" path="D:\Projet dev\IdeaProjects\M1\Test_&_Test_unitaire\Seance1\Test_cycle_TDD\app\src\domain\services\personService.js">
-        <metrics statements="13" coveredstatements="13" conditionals="15" coveredconditionals="15" methods="3" coveredmethods="3"/>
+        <metrics statements="16" coveredstatements="16" conditionals="19" coveredconditionals="19" methods="3" coveredmethods="3"/>
         <line num="7" count="1" type="stmt"/>
         <line num="18" count="4" type="stmt"/>
         <line num="19" count="4" type="stmt"/>
@@ -136,9 +136,12 @@
         <line num="49" count="5" type="stmt"/>
         <line num="50" count="5" type="stmt"/>
         <line num="51" count="2" type="stmt"/>
-        <line num="53" count="3" type="cond" truecount="4" falsecount="0"/>
-        <line num="54" count="1" type="stmt"/>
-        <line num="56" count="2" type="stmt"/>
+        <line num="53" count="3" type="stmt"/>
+        <line num="55" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="56" count="1" type="stmt"/>
+        <line num="59" count="2" type="cond" truecount="4" falsecount="0"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
       </file>
     </package>
     <package name="utils">

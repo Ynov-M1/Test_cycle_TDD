@@ -140,13 +140,12 @@ describe("Navigation and User Registration E2E Tests", () => {
             cy.get('[data-cy=zip]').type("75001");
             cy.get('[data-cy=city]').type("Paris");
 
-            // Listen to alert
-            cy.on('window:alert', (text) => {
-                expect(text).to.contains("Unable to fetch users. Server may be unavailable");
-            });
-
             cy.get('[data-cy=submit]').click();
             cy.wait('@createUserFail');
+
+            cy.get('.toast-server-error')
+                .should('be.visible')
+                .and('contain.text', "Serveur indisponible, réessayez plus tard");
 
             // Back home works
             cy.get('[data-cy=back-home]').click();

@@ -50,9 +50,16 @@ export async function createUser(person, existingEmails = []) {
         const response = await axios.post(`${API_BASE}/users`, person);
         return response.data;
     } catch (error) {
-        if (error.response?.status === 400 && error.response.data?.message === "EMAIL_ALREADY_EXISTS") {
-            throw new Error("EMAIL_ALREADY_EXISTS")
+        const status = error.response?.status;
+
+        if (status === 400 && error.response.data?.message === "EMAIL_ALREADY_EXISTS") {
+            throw new Error("EMAIL_ALREADY_EXISTS");
         }
-        throw new Error("SERVER_ERROR")
+
+        if (status >= 500 && status < 600) {
+            throw new Error("SERVER_ERROR");
+        }
+
+        throw new Error("SERVER_ERROR");
     }
 }

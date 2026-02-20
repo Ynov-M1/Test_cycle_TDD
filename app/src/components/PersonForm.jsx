@@ -115,7 +115,7 @@ export default function PersonForm({addPerson}) {
             let key = 'form'
             /* istanbul ignore next */
             if (err.message.includes('SERVER_ERROR')) {
-                toast.error(errorMessages.SERVER_ERROR, { toastId: "server-error-toast" })
+                toast.error(errorMessages.SERVER_ERROR, { toastId: "server-error-toast", className: 'toast-server-error' })
             } else if (err.message.includes('FIRST_NAME')) key = 'firstName'
             else if (err.message.includes('LAST_NAME')) key = 'lastName'
             else if (err.message.includes('INVALID_EMAIL') || err.message.includes('EMAIL_ALREADY_EXISTS')) key = 'email'

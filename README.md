@@ -53,7 +53,9 @@ L’application utilise React Router pour gérer plusieurs pages:
 
 L’état global de la liste des utilisateurs (persons) est remonté vers App.jsx (lift state up) pour que toutes les pages puissent accéder à la liste mise à jour.
 
-La liste des utilisateurs est persistée dans localStorage et synchronisée entre plusieurs onglets/fenêtres via un écouteur storage.
+La liste des utilisateurs est récupérée et ajoutée via l’API JSONPlaceholder (Axios).
+
+Note : JSONPlaceholder ne persiste pas réellement les POST, la liste est donc simulée.
 
 ## Fonctionnalités clés
 
@@ -73,9 +75,23 @@ Les tests couvrent : validation des champs, intégration du formulaire et affich
 
 Les rapports sont générés dans app/coverage et envoyés automatiquement sur Codecov via GitHub Actions.
 
+- Axios est mocké avec `jest.mock('axios')` pour isoler le front-end
+- Les tests couvrent :
+    - Succès (200/201)
+    - Erreur métier (400) : email déjà existant
+    - Crash serveur (500) : application ne plante pas
+- Cas particuliers testés : noms incomplets ou vides, `existingEmails` non fourni
+
 ## Tests End-to-End (Cypress)
 
 Le projet contient des scénarios E2E vérifiant la navigation et la cohérence des données.
+
+- Routes GET /users et POST /users bouchonnées avec `cy.intercept`
+- Scénarios testés :
+    - Ajout d’un nouvel utilisateur valide
+    - Email déjà existant → message d’erreur
+    - Erreur serveur → alert, application ne plante pas
+    - Retour à l’accueil → compteur et liste cohérents
 
 ### Scénario Nominal
 
@@ -110,5 +126,6 @@ pnpm run doc
 
 - Build de l’application via Vite
 - Exécution des tests unitaires, d’intégration et E2E (Cypress headless)
+- Aucun appel réseau réel : Axios mocké en tests unitaires et cy.intercept en E2E
 - Upload des rapports de couverture vers Codecov
 - Déploiement sur GitHub Pages si tous les tests passentement storage permet de synchroniser l’état entre plusieurs onglets/fenêtres : si un utilisateur est ajouté dans un onglet, la liste se met à jour automatiquement dans les autres.
