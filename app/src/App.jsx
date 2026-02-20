@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { useState, useEffect } from "react"
 import Home from "./pages/Home"
 import Register from "./pages/Register"
+import { addPerson as addPersonService } from "./domain/personService";
 
 /**
  * Main App Component
@@ -33,30 +34,21 @@ function App() {
     }, []);
 
     /**
-     * Add a person to the state and persist to localStorage.
+     * Adds a person to the application state and persists it to localStorage.
      *
-     * Performs a uniqueness check on the email before adding the person.
-     * If an existing person already has the same email (case-insensitive),
-     * an error is thrown to prevent duplication.
+     * Delegates business validation (e.g., email uniqueness)
+     * to the domain service (addPersonService).
      *
      * @module App
      * @function addPerson
      * @private
      * @param {Object} person - Person object to add
-     * @throws {Error} Throws "EMAIL_ALREADY_EXISTS" if the email is already registered
+     * @throws {Error} Propagates errors thrown by addPersonService
      */
     const addPerson = (person) => {
-        const emailExists = persons.some(
-            p => p.email.toLowerCase() === person.email.toLowerCase()
-        );
-
-        if (emailExists) {
-            throw new Error("EMAIL_ALREADY_EXISTS");
-        }
-
-        const newPersons = [...persons, person];
+        const newPersons = addPersonService(persons, person);
         setPersons(newPersons);
-        localStorage.setItem('persons', JSON.stringify(newPersons));
+        localStorage.setItem("persons", JSON.stringify(newPersons));
     };
 
     return (
