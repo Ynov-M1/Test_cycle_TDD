@@ -1,7 +1,7 @@
 {
   "name": "theo_lafond_react_ci_cd",
   "private": false,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "homepage": "https://github.com/Ynov-M1/Test_cycle_TD/app",
   "scripts": {
