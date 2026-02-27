@@ -1,4 +1,4 @@
-name: Build and Test React Application
+name: Build, Test, Publish and Deploy React Application
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
 
 jobs:
   build_test:
+    name: Build and Test React App
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [20.x]
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -63,8 +63,57 @@ jobs:
         with:
           path: ./app/dist
 
-  deploy:
+  publish-npm:
+    name: Publish NPM Package
+    runs-on: ubuntu-latest
     needs: build_test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: cd app && pnpm install --frozen-lockfile
+
+      - name: Determine if new version
+        id: semver
+        run: |
+          cd app
+          CURRENT=$(jq -r .version package.json)
+          echo "Current version: $CURRENT"
+          LATEST=$(npm view theo_lafond_react_ci_cd version 2>/dev/null || echo 0.0.0)
+          echo "Latest published version: $LATEST"
+          if [ "$(printf '%s\n' "$CURRENT" "$LATEST" | sort -V | head -n1)" = "$LATEST" ] && [ "$CURRENT" != "$LATEST" ]; then
+            echo "publish=true" >> $GITHUB_ENV
+          else
+            echo "publish=false" >> $GITHUB_ENV
+          fi
+
+      - name: Publish package to NPM
+        if: env.publish == 'true'
+        run: |
+          cd app
+          pnpm run build-npm
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Skip publishing
+        if: env.publish == 'false'
+        run: echo "Version already published. Skipping publish."
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: [build_test, publish-npm]
     permissions:
       pages: write
       id-token: write
@@ -73,6 +122,6 @@ jobs:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
     steps:
-      - name: Deploy to Github pages
+      - name: Deploy to Github Pages
         id: deployment
         uses: actions/deploy-pages@v4

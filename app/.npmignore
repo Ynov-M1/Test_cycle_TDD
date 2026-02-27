@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Source (on publie seulement dist)
+src/
+
+# Vite / App files
+vite.config.js
+index.html
+
+# Tests
+coverage
+cypress
+test
