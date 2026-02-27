@@ -15,6 +15,7 @@ Ce projet est un exemple d’application React configurée avec Vite, intégrant
 - Application déployée : https://ynov-m1.github.io/Test_cycle_TDD/
 - Documentation technique (JSDoc) : https://ynov-m1.github.io/Test_cycle_TDD/docs/
 - Tableau de bord Codecov : https://codecov.io/gh/Ynov-M1/Test_cycle_TDD
+- Package NPM : https://www.npmjs.com/package/theo_lafond_react_ci_cd
 
 ## Prérequis
 
