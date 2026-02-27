@@ -1,1 +1,2 @@
-export { default as App } from "./App";
+const App = require('./App');
+module.exports = { App };
