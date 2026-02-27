@@ -15,7 +15,7 @@ import {errorMessages} from "./utils/errorMessages.js";
  * @component
  * @returns {JSX.Element} The main application component with routes
  */
-function App() {
+function App({ basename = "/" }) {
     const [persons, setPersons] = useState([]);
     const [loading, setLoading] = useState(true);
     const [serverError, setServerError] = useState(null);
@@ -57,7 +57,7 @@ function App() {
     };
 
     return (
-        <BrowserRouter basename="/Test_cycle_TDD/">
+        <BrowserRouter basename={basename}>
             <Routes>
                 <Route path="/" element={<Home persons={persons} loading={loading} serverError={serverError}/>} />
                 <Route path="/register" element={<Register addPerson={addPerson} />} />
