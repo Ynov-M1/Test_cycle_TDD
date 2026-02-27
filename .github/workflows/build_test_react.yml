@@ -96,7 +96,11 @@ jobs:
             echo "publish=true" >> $GITHUB_ENV
           else
             echo "publish=false" >> $GITHUB_ENV
-          fi
+
+      - name: Configure NPM authentication explicitly
+        if: env.publish == 'true'
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish package to NPM
         if: env.publish == 'true'
@@ -104,8 +108,6 @@ jobs:
           cd app
           pnpm run build-npm
           npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Skip publishing
         if: env.publish == 'false'
