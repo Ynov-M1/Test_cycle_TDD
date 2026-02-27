@@ -96,6 +96,7 @@ jobs:
             echo "publish=true" >> $GITHUB_ENV
           else
             echo "publish=false" >> $GITHUB_ENV
+          fi
 
       - name: Configure NPM authentication explicitly
         if: env.publish == 'true'
