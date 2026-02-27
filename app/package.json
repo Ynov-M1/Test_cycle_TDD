@@ -1,8 +1,16 @@
 {
   "name": "theo_lafond_react_ci_cd",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "homepage": "https://github.com/Ynov-M1/Test_cycle_TD/app",
   "scripts": {
     "dev": "vite",
