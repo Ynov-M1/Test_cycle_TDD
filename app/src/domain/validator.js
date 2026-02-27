@@ -128,7 +128,7 @@ export function validateName(name, type = "firstName") {
  */
 export function validateEmail(email) {
     if (typeof email !== "string") {
-        throw new Error("INVALID_EMAIL");
+        throw new TypeError("INVALID_EMAIL");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
