@@ -163,13 +163,7 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
             -e MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} \
             theolafond/migration_mysql:0.0.1
-
-          echo "Waiting for MySQL to be ready..."
-          until docker exec migration_container mysqladmin ping -h "localhost" --silent; do
-            echo "MySQL not ready yet, waiting 2s..."
-            sleep 2
-          done
-          echo "MySQL is ready!"
+          sleep 20
 
       - name: Run FastAPI container
         run: |
@@ -182,6 +176,7 @@ jobs:
             -e MYSQL_DB=${{ secrets.MYSQL_DATABASE }} \
             -p 8000:8000 \
             theolafond/api_fastapi:0.0.1
+          sleep 10
 
       - name: Wait FastAPI initialization
         run: |
@@ -212,7 +207,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
 
       - name: Push FastAPI image to Docker Hub
         run: docker push theolafond/api_fastapi:0.0.1
