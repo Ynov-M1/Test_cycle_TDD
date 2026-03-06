@@ -173,6 +173,9 @@ jobs:
             -p 8000:8000 \
             theolafond/api_fastapi:0.0.1
 
+      - name: Wait FastAPI initialization
+        run: sleep 15
+
       - name: Test FastAPI /users endpoint
         run: |
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/users)
