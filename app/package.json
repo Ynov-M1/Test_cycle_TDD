@@ -1,7 +1,7 @@
 {
   "name": "theo_lafond_react_ci_cd",
   "private": false,
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/index.js",
