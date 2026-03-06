@@ -158,7 +158,7 @@ jobs:
       - name: Wait MySQL initialization
         run: sleep 20
 
-      - name: Launch Python API Container
+      - name: Launch API Container
         run: |
           docker run -d --name python-container -p 8000:8000 \
             -e MYSQL_HOST=migration_container \
@@ -166,13 +166,13 @@ jobs:
             -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
             -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
             --link migration_container:mysql \
-            theolafond/api_fastapi:0.0.1
+            theolafond/api_fastapi:0.0.1 || true
 
       - name: Wait for API to be ready
         run: |
           echo "Waiting for API to start..."
           sleep 25
-          docker ps
+          docker ps -a
 
       - name: Test API Endpoint
         run: |
