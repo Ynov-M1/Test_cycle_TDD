@@ -88,10 +88,31 @@ jobs:
         id: semver
         run: |
           cd app
+          set -e
+
           CURRENT=$(jq -r .version package.json)
           echo "Current version: $CURRENT"
-          LATEST=$(npm view theo_lafond_react_ci_cd version 2>/dev/null || echo 0.0.0)
+
+          set +e
+          OUTPUT=$(npm view theo_lafond_react_ci_cd version 2>&1)
+          STATUS=$?
+          set -e
+
+          if [ $STATUS -ne 0 ]; then
+            if echo "$OUTPUT" | grep -q "E404"; then
+              echo "Package does not exist yet."
+              LATEST="0.0.0"
+            else
+              echo "Unexpected npm error:"
+              echo "$OUTPUT"
+              exit 1
+            fi
+          else
+            LATEST="$OUTPUT"
+          fi
+
           echo "Latest published version: $LATEST"
+
           if [ "$(printf '%s\n' "$CURRENT" "$LATEST" | sort -V | head -n1)" = "$LATEST" ] && [ "$CURRENT" != "$LATEST" ]; then
             echo "publish=true" >> $GITHUB_ENV
           else
