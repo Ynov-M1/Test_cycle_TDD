@@ -156,7 +156,7 @@ jobs:
             theolafond/migration_mysql:0.0.1
 
       - name: Wait MySQL initialization
-        run: sleep 15
+        run: sleep 20
 
       - name: Launch Python API Container
         run: |
@@ -171,7 +171,7 @@ jobs:
       - name: Wait for API to be ready
         run: |
           echo "Waiting for API to start..."
-          sleep 10
+          sleep 25
           docker ps
 
       - name: Test API Endpoint
