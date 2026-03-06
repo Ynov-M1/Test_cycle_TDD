@@ -166,11 +166,12 @@ jobs:
         run: |
           docker run -d \
             --name fastAPI \
-            -e MYSQL_HOST=172.17.0.1 \
+            -e MYSQL_HOST=migration_container \
             -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
             -e MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
             -e MYSQL_DB=${{ secrets.MYSQL_DATABASE }} \
             -p 8000:8000 \
+            --link migration_container:mysql \
             theolafond/api_fastapi:0.0.1
 
       - name: Wait FastAPI initialization
