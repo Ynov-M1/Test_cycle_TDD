@@ -163,24 +163,39 @@ jobs:
           docker run -d \
             --name migration_container \
             -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
+            -e MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} \
             -p 3306:3306 \
             theolafond/migration_mysql:0.0.1
-          sleep 10
+
+          echo "Waiting for MySQL to be ready..."
+          until docker exec migration_container mysqladmin ping -h "localhost" --silent; do
+            echo "MySQL not ready yet, waiting 2s..."
+            sleep 2
+          done
+          echo "MySQL is ready!"
 
       - name: Run FastAPI container
         run: |
           docker run -d \
-                    --name fastAPI \
-                    -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
-                    -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
-                    -e MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
-                    -e MYSQL_DB=${{ secrets.MYSQL_DATABASE }} \
-                    -p 8000:8000 \
-                    theolafond/api_fastapi:0.0.1
+            --name fastAPI \
+            -e MYSQL_HOST=host.docker.internal \
+            -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
+            -e MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
+            -e MYSQL_DB=${{ secrets.MYSQL_DATABASE }} \
+            -p 8000:8000 \
+            theolafond/api_fastapi:0.0.1
 
-      - name: Test FastAPI /users endpoint
-        run: |
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/users)
+          echo "Waiting for FastAPI to be ready..."
+          for i in {1..20}; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/users || true)
+            if [ "$HTTP_CODE" -eq 200 ]; then
+              echo "FastAPI is ready!"
+              break
+            fi
+            echo "Attempt $i: FastAPI not ready yet, waiting 2s..."
+            sleep 2
+          done
+
           if [ "$HTTP_CODE" -ne 200 ]; then
             echo "FastAPI API test failed!"
             docker logs fastAPI
