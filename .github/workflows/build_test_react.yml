@@ -186,7 +186,6 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
             -e MYSQL_DATABASE=ynov_ci \
             -e MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
-            -e MYSQL_DB=ynov_ci \
             theolafond/api_fastapi:0.0.1 || true
 
       - name: Test API Endpoint
@@ -210,12 +209,12 @@ jobs:
           
           USERS_COUNT=$(jq '.utilisateurs | length' response.json)
           if [ -z "$USERS_COUNT" ] || [ "$USERS_COUNT" -le 0 ]; then
-            echo "Endpoint returned an empty utilisateurs list."
+            echo "Endpoint returned an empty users list."
             cat response.json
             exit 1
           fi
           
-          echo "Validation passed with $USERS_COUNT utilisateurs."
+          echo "Validation passed with $USERS_COUNT users."
 
       - name: Stop and remove containers
         run: |
