@@ -164,7 +164,7 @@ jobs:
         shell: bash
         run: |
           for i in {1..40}; do
-            if docker exec mysql_container mysql -uroot -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "USE ynov_ci; SELECT COUNT(*) FROM utilisateur;" >/dev/null 2>&1; then
+            if docker exec mysql_container mysql -uroot -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "USE ynov_ci; SELECT COUNT(*) FROM users;" >/dev/null 2>&1; then
               echo "MySQL is initialized and queryable."
               exit 0
             fi
