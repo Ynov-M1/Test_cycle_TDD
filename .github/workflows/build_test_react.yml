@@ -153,7 +153,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build MySQL image
-        run: docker build -t theolafond/migration_mysql:0.0.1
+        run: docker build -t theolafond/migration_mysql:0.0.1 .
 
       - name: Build FastAPI image
         run: docker build -t theolafond/api_fastapi:0.0.1 ./server
