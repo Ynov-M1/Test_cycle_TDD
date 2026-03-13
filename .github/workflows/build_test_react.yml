@@ -165,20 +165,30 @@ jobs:
       - name: Test API Endpoint
         shell: bash
         run: |
-          HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" http://localhost:8000/users)
-          if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "API endpoint /users failed"
-            [ -f response.json ] && cat response.json || true
-            docker compose -f ./docker-compose.yml logs api || true
-            exit 1
-          fi
-          USERS_COUNT=$(jq '.utilisateurs | length' response.json)
-          if [[ -z "$USERS_COUNT" || "$USERS_COUNT" -le 0 ]]; then
-            echo "Endpoint returned an empty users list."
-            cat response.json
-            exit 1
-          fi
-          echo "Validation passed with $USERS_COUNT users."
+          for i in {1..30}; do
+             HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" http://localhost:8000/users || true)
+             if [ "$HTTP_CODE" = "200" ]; then
+               break
+             fi
+             echo "Waiting for API... attempt $i/30 (HTTP=$HTTP_CODE)"
+             sleep 2
+           done
+          
+           if [ "$HTTP_CODE" != "200" ]; then
+             echo "API did not return HTTP 200."
+             [ -f response.json ] && cat response.json || true
+             docker logs fastAPI || true
+             exit 1
+           fi
+          
+           USERS_COUNT=$(jq '.utilisateurs | length' response.json)
+           if [ -z "$USERS_COUNT" ] || [ "$USERS_COUNT" -le 0 ]; then
+             echo "Endpoint returned an empty users list."
+             cat response.json
+             exit 1
+           fi
+          
+           echo "Validation passed with $USERS_COUNT users."
 
       - name: Stop and remove CI containers
         if: always()
