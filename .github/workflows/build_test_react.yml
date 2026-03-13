@@ -228,7 +228,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push FastAPI image to Docker Hub
-        run: docker push theolafond/api_fastapi:0.0.1
+        run: docker push theolafond/api_fastapi:0.0.2
 
   deploy:
     name: Deploy to GitHub Pages
