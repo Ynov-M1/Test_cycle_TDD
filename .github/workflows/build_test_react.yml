@@ -159,26 +159,8 @@ jobs:
       - name: Build Docker Images
         run: docker compose -f ./docker-compose.yml build
 
-      - name: Launch CI containers
-        run: docker compose -f ./docker-compose.yml up -d
-
-      - name: Wait for containers to be healthy
-        shell: bash
-        run: |
-          for i in {1..30}; do
-            STATUS_DB=$(docker inspect --format='{{.State.Health.Status}}' test_cycle_tdd-db-1)
-            STATUS_API=$(docker inspect --format='{{.State.Health.Status}}' test_cycle_tdd-api-1)
-            if [[ "$STATUS_DB" == "healthy" && "$STATUS_API" == "healthy" ]]; then
-              echo "Containers are healthy."
-              break
-            fi
-            echo "Waiting for containers to become healthy... attempt $i/30"
-            sleep 5
-          done
-          if [[ "$STATUS_DB" != "healthy" || "$STATUS_API" != "healthy" ]]; then
-            docker compose -f ./docker-compose.yml logs
-            exit 1
-          fi
+      - name: Launch CI containers and wait for healthchecks
+        run: docker compose -f ./docker-compose.yml up -d --wait
 
       - name: Test API Endpoint
         shell: bash
