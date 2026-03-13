@@ -136,90 +136,57 @@ jobs:
         run: echo "Version already published. Skipping publish."
 
   publish_api:
-    name: Build, Test and Publish FastAPI
+    name: Build, Test and Publish FastAPI (Docker Compose)
     runs-on: ubuntu-latest
     needs: publish-npm
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build MySQL Image
-        run: docker build -t theolafond/migration_mysql:0.0.1 .
+      - name: Build Docker Images
+        run: docker compose -f ./docker-compose.yml build
 
-      - name: Build Python FastAPI Image
-        run: docker build -t theolafond/api_fastapi:0.0.2 ./server
+      - name: Launch CI containers
+        run: docker compose -f ./docker-compose.yml up -d
 
-      - name: Create network
-        run: docker network create ci_network
-
-      - name: Launch MySQL Container
-        run: |
-          docker run -d \
-            --name mysql_container \
-            --network ci_network \
-            -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
-            -e MYSQL_DATABASE=ynov_ci \
-            theolafond/migration_mysql:0.0.1
-
-      - name: Wait for MySQL initialization
+      - name: Wait for containers to be healthy
         shell: bash
         run: |
-          for i in {1..40}; do
-            if docker exec mysql_container mysql -uroot -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "USE ynov_ci; SELECT COUNT(*) FROM users;" >/dev/null 2>&1; then
-              echo "MySQL is initialized and queryable."
-              exit 0
+          for i in {1..30}; do
+            STATUS_DB=$(docker inspect --format='{{.State.Health.Status}}' test_cycle_tdd-db-1)
+            STATUS_API=$(docker inspect --format='{{.State.Health.Status}}' test_cycle_tdd-api-1)
+            if [[ "$STATUS_DB" == "healthy" && "$STATUS_API" == "healthy" ]]; then
+              echo "Containers are healthy."
+              break
             fi
-            echo "Waiting for MySQL... attempt $i/40"
-            sleep 3
+            echo "Waiting for containers to become healthy... attempt $i/30"
+            sleep 5
           done
-          echo "MySQL did not become ready in time."
-          docker logs mysql_container
-          exit 1
-          
-      - name: Launch API Container
-        run: |
-          docker run -d \
-            --name fastAPI \
-            --network ci_network \
-            -p 8000:8000 \
-            -e MYSQL_HOST=mysql_container \
-            -e MYSQL_USER=root \
-            -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
-            -e MYSQL_DATABASE=ynov_ci \
-            -e MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
-            theolafond/api_fastapi:0.0.2 || true
+          if [[ "$STATUS_DB" != "healthy" || "$STATUS_API" != "healthy" ]]; then
+            docker compose -f ./docker-compose.yml logs
+            exit 1
+          fi
 
       - name: Test API Endpoint
         shell: bash
         run: |
-          for i in {1..30}; do
-            HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" http://localhost:8000/users || true)
-            if [ "$HTTP_CODE" = "200" ]; then
-              break
-            fi
-            echo "Waiting for API... attempt $i/30 (HTTP=$HTTP_CODE)"
-            sleep 2
-          done
-          
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "API did not return HTTP 200."
+          HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" http://localhost:8000/users)
+          if [[ "$HTTP_CODE" != "200" ]]; then
+            echo "API endpoint /users failed"
             [ -f response.json ] && cat response.json || true
-            docker logs fastAPI || true
+            docker compose -f ./docker-compose.yml logs api || true
             exit 1
           fi
-          
           USERS_COUNT=$(jq '.utilisateurs | length' response.json)
-          if [ -z "$USERS_COUNT" ] || [ "$USERS_COUNT" -le 0 ]; then
+          if [[ -z "$USERS_COUNT" || "$USERS_COUNT" -le 0 ]]; then
             echo "Endpoint returned an empty users list."
             cat response.json
             exit 1
           fi
-          
           echo "Validation passed with $USERS_COUNT users."
 
-      - name: Stop and remove containers
-        run: |
-          docker stop fastAPI migration_container || true
-          docker rm fastAPI migration_container || true
+      - name: Stop and remove CI containers
+        if: always()
+        run: docker compose -f ./docker-compose.yml down
 
       - name: Log in to DockerHub
         uses: docker/login-action@v2
@@ -228,7 +195,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push FastAPI image to Docker Hub
-        run: docker push theolafond/api_fastapi:0.0.2
+        run: docker compose -f ./docker-compose.yml push api
 
   deploy:
     name: Deploy to GitHub Pages
