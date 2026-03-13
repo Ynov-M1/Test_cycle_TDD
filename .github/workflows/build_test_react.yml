@@ -146,7 +146,7 @@ jobs:
         run: docker build -t theolafond/migration_mysql:0.0.1 .
 
       - name: Build Python FastAPI Image
-        run: docker build -t theolafond/api_fastapi:0.0.1 ./server
+        run: docker build -t theolafond/api_fastapi:0.0.2 ./server
 
       - name: Create network
         run: docker network create ci_network
@@ -186,7 +186,7 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
             -e MYSQL_DATABASE=ynov_ci \
             -e MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
-            theolafond/api_fastapi:0.0.1 || true
+            theolafond/api_fastapi:0.0.2 || true
 
       - name: Test API Endpoint
         shell: bash
