@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:9.6
+
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ./sqlfiles:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -uroot -p$MYSQL_ROOT_PASSWORD -e 'USE $MYSQL_DATABASE; SHOW TABLES LIKE \"users\";' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  adminer:
+    depends_on:
+      db:
+        condition: service_healthy
+    image: adminer
+    restart: no
+    ports:
+      - 8080:8080
+
+  api:
+    build:
+      context: ./server
+    image: theolafond/api_fastapi:0.0.2
+    restart: no
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8000:8000
+    environment:
+      MYSQL_HOST: db
+    env_file:
+      - ./server/.env

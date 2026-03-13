@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 USE ynov_ci;
 
 INSERT INTO users (firstName, lastName, email, birthDate, zip, city) VALUES
