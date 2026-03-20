@@ -111,9 +111,9 @@ export default function PersonForm({addPerson}) {
             setForm({ firstName: '', lastName: '', email: '', birthDate: '', zip: '', city: '' })
             setErrors({})
         } catch (err) {
-            /* istanbul ignore next */
+            /* c8 ignore start */
             let key = 'form'
-            /* istanbul ignore next */
+            /* c8 ignore start */
             if (err.message.includes('SERVER_ERROR')) {
                 toast.error(errorMessages.SERVER_ERROR, { toastId: "server-error-toast", className: 'toast-server-error' })
             } else if (err.message.includes('FIRST_NAME')) key = 'firstName'
@@ -123,7 +123,7 @@ export default function PersonForm({addPerson}) {
             else if (err.message.includes('CITY')) key = 'city'
             else if (err.message.includes('UNDERAGE') || err.message.includes('FUTURE_DATE')) key = 'birthDate'
 
-            /* istanbul ignore next */
+            /* c8 ignore start */
             setErrors({ [key]: err.message })
         }
     }

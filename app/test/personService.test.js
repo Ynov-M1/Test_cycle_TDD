@@ -1,7 +1,7 @@
-import { fetchUsers, createUser } from '../src/domain/services/personService';
+import { fetchUsers, createUser, deleteUser } from '../src/domain/services/personService';
 import axios from 'axios';
 
-jest.mock('axios');
+vi.mock('axios');
 
 describe('personService', () => {
 
@@ -91,6 +91,34 @@ describe('personService', () => {
             axios.post.mockRejectedValue({ response: { status: 400, data: { message: 'EMAIL_ALREADY_EXISTS' } } });
             await expect(createUser(person, [])).rejects.toThrow('EMAIL_ALREADY_EXISTS');
         });
+    });
+
+    describe('deleteUser', () => {
+
+        it('should throw USER_NOT_FOUND if status is 404', async () => {
+            axios.delete.mockRejectedValueOnce({ response: { status: 404 } });
+
+            await expect(deleteUser(123)).rejects.toThrow('USER_NOT_FOUND');
+        });
+
+        it('should throw SERVER_ERROR if status is 500', async () => {
+            axios.delete.mockRejectedValueOnce({ response: { status: 500 } });
+
+            await expect(deleteUser(123)).rejects.toThrow('SERVER_ERROR');
+        });
+
+        it('should throw SERVER_ERROR for other errors', async () => {
+            axios.delete.mockRejectedValueOnce(new Error('Network error'));
+
+            await expect(deleteUser(123)).rejects.toThrow('SERVER_ERROR');
+        });
+
+        it('should succeed if delete does not throw', async () => {
+            axios.delete.mockResolvedValueOnce({}); // simulate successful delete
+
+            await expect(deleteUser(123)).resolves.toBeUndefined();
+        });
+
     });
 
 });

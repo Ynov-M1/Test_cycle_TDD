@@ -189,7 +189,7 @@ describe('PersonForm localStorage pre-existing users', () => {
 });
 
 const renderPersonForm = () => {
-    const mockAddPerson = jest.fn((person) => {
+    const mockAddPerson = vi.fn((person) => {
         const stored = JSON.parse(localStorage.getItem('persons') || '[]');
         localStorage.setItem('persons', JSON.stringify([...stored, person]));
     });

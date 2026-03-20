@@ -17,7 +17,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest --coverage",
+    "test": "vitest run --coverage",
     "doc": "jsdoc -R ../README.md -c jsdoc.json -r -d ./public/docs --private",
     "cypress": "cypress open",
     "build-npm": "cross-env NODE_ENV=production rimraf dist && npx babel src --out-dir dist --copy-files"
@@ -43,6 +43,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "@vitest/coverage-v8": "4.1.0",
     "babel-jest": "^30.2.0",
     "cross-env": "^10.1.0",
     "cypress": "^15.10.0",
@@ -53,9 +54,11 @@
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "jsdoc": "^4.0.5",
+    "jsdom": "^29.0.1",
     "react-test-renderer": "^19.2.4",
     "rimraf": "^6.1.3",
     "rollup": "^4.59.0",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^4.1.0"
   }
 }
