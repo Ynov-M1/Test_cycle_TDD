@@ -28,7 +28,7 @@ services:
   api:
     build:
       context: ./server
-    image: theolafond/api_fastapi:0.0.2
+    image: theolafond/api_fastapi:0.0.3
     restart: no
     depends_on:
       db:
@@ -39,3 +39,19 @@ services:
       MYSQL_HOST: db
     env_file:
       - ./server/.env
+
+  frontend:
+    build:
+      context: ./app
+      dockerfile: react.Dockerfile
+    container_name: react_front
+    restart: no
+    ports:
+      - 5173:5173
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    depends_on:
+      api:
+        condition: service_started
+    command: pnpm dev --host

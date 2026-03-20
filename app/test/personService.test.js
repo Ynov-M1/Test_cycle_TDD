@@ -7,11 +7,13 @@ describe('personService', () => {
 
     describe('fetchUsers', () => {
         it('should return a list of users on success', async () => {
-            const mockData = [
-                { name: 'John Doe', email: 'john@example.com', address: { city: 'Paris', zipcode: '75001' } }
-            ];
-            axios.get.mockResolvedValue({ data: mockData });
-
+            axios.get.mockResolvedValue({
+                data: {
+                    utilisateurs: [
+                        [1, 'John', 'Doe', 'john@example.com', '1990-01-01', '75001', 'Paris']
+                    ]
+                }
+            });
             const users = await fetchUsers();
             expect(users).toHaveLength(1);
             expect(users[0]).toMatchObject({
@@ -24,11 +26,14 @@ describe('personService', () => {
         });
 
         it('should handle empty name or single word name', async () => {
-            const mockData = [
-                { name: '', email: 'empty@example.com', address: {} },
-                { name: 'Alice', email: 'alice@example.com', address: { city: 'Lyon', zipcode: '69000' } }
-            ];
-            axios.get.mockResolvedValue({ data: mockData });
+            axios.get.mockResolvedValue({
+                data: {
+                    utilisateurs: [
+                        [1, '', '', 'empty@example.com', null, null, null],
+                        [2, 'Alice', '', 'alice@example.com', null, null, 'Lyon']
+                    ]
+                }
+            });
 
             const users = await fetchUsers();
 

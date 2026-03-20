@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import {toast, ToastContainer} from "react-toastify";
+import { FaTrash } from "react-icons/fa";
 
 /**
  * Home Component
@@ -16,7 +17,7 @@ import {toast, ToastContainer} from "react-toastify";
  *
  * @returns {JSX.Element}
  */
-export default function Home({persons, loading, serverError }) {
+export default function Home({persons, loading, serverError, deletePerson}) {
     const navigate = useNavigate();
 
     /**
@@ -27,6 +28,18 @@ export default function Home({persons, loading, serverError }) {
      */
     const handleGoToForm = () => {
         navigate('/register');
+    };
+
+    const handleDelete = (user) => {
+        if (window.confirm(`Voulez-vous vraiment supprimer ${user.firstName} ${user.lastName} ?`)) {
+            deletePerson(user.id)
+                .then(() => {
+                    toast.success("Utilisateur supprimé avec succès !");
+                })
+                .catch(() => {
+                    toast.error("Erreur lors de la suppression.");
+                });
+        }
     };
 
     if (serverError) {
@@ -71,6 +84,13 @@ export default function Home({persons, loading, serverError }) {
                             {persons.map((person, index) => (
                                 <li key={index}>
                                     {person.firstName} {person.lastName} ({person.email})
+                                    <button
+                                        className="delete-btn"
+                                        onClick={() => handleDelete(person)}
+                                        title="Supprimer l'utilisateur"
+                                    >
+                                        <FaTrash  className="delete-icon"/>
+                                    </button>
                                 </li>
                             ))}
                         </ul>

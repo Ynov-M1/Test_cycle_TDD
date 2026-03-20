@@ -1,10 +1,9 @@
 import axios from "axios";
 
 /**
- * Base API URL for JSONPlaceholder.
- * Note: JSONPlaceholder does not persist POST requests.
+ * Base API URL
  */
-const API_BASE = "https://jsonplaceholder.typicode.com";
+const API_BASE = import.meta.env.API_BASE || "http://localhost:8000";
 
 /**
  * Fetch all users from the API.
@@ -17,13 +16,14 @@ const API_BASE = "https://jsonplaceholder.typicode.com";
 export async function fetchUsers() {
     try {
         const response = await axios.get(`${API_BASE}/users`);
-        return response.data.map(u => ({
-            firstName: u.name.split(' ')[0] || '',
-            lastName: u.name.split(' ')[1] || '',
-            email: u.email,
-            birthDate: '',
-            zip: u.address?.zipcode || '',
-            city: u.address?.city || ''
+        return response.data.utilisateurs.map(u => ({
+            id: u[0],
+            firstName: u[1],
+            lastName: u[2],
+            email: u[3],
+            birthDate: u[4],
+            zip: u[5],
+            city: u[6]
         }));
     } catch (error) {
         throw new Error("SERVER_ERROR");
@@ -54,6 +54,33 @@ export async function createUser(person, existingEmails = []) {
 
         if (status === 400 && error.response.data?.message === "EMAIL_ALREADY_EXISTS") {
             throw new Error("EMAIL_ALREADY_EXISTS");
+        }
+
+        if (status >= 500 && status < 600) {
+            throw new Error("SERVER_ERROR");
+        }
+
+        throw new Error("SERVER_ERROR");
+    }
+}
+
+/**
+ * Delete a user via API.
+ *
+ * @async
+ * @function deleteUser
+ * @param {number} userId - ID of the user to delete
+ * @returns {Promise<void>}
+ * @throws {Error} Throws "USER_NOT_FOUND" or "SERVER_ERROR"
+ */
+export async function deleteUser(userId) {
+    try {
+        await axios.delete(`${API_BASE}/users/${userId}`);
+    } catch (error) {
+        const status = error.response?.status;
+
+        if (status === 404) {
+            throw new Error("USER_NOT_FOUND");
         }
 
         if (status >= 500 && status < 600) {

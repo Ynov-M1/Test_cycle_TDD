@@ -55,3 +55,22 @@
     border-bottom: 1px solid #eee;
     font-size: 0.95rem;
 }
+
+.card .delete-btn {
+    background-color: transparent;
+    color: #3e999f;
+    border: none;
+    cursor: pointer;
+    padding: 0 0.3rem;
+}
+
+.card .delete-btn:hover {
+    background-color: transparent;
+}
+
+.delete-icon {
+    color: red;
+    font-size: 0.8rem;
+    vertical-align: middle;
+    transition: transform 0.2s;
+}

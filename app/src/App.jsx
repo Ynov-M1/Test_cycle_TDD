@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
-import { fetchUsers, createUser } from "./domain/services/personService";
+import { fetchUsers, createUser, deleteUser } from "./domain/services/personService";
 import {errorMessages} from "./utils/errorMessages.js";
 
 /**
@@ -54,12 +54,32 @@ function App({ basename = "/" }) {
         const existingEmails = persons.map(p => p.email.toLowerCase());
         const newUser = await createUser(person, existingEmails);
         setPersons(prev => [...prev, newUser]);
+        if (newUser.firstName && newUser.email) {
+            setPersons(prev => [...prev, newUser]);
+        } else {
+            const users = await fetchUsers();
+            setPersons(users);
+        }
+    };
+
+    /**
+     * Delete a person both via API and state update.
+     * @async
+     * @param {number} userId
+     */
+    const deletePerson= async (userId) => {
+        try {
+            await deleteUser(userId);
+            setPersons(prev => prev.filter(p => p.id !== userId));
+        } catch (err) {
+            throw err;
+        }
     };
 
     return (
         <BrowserRouter basename={basename}>
             <Routes>
-                <Route path="/" element={<Home persons={persons} loading={loading} serverError={serverError}/>} />
+                <Route path="/" element={<Home persons={persons} loading={loading} serverError={serverError} deletePerson={deletePerson}/>} />
                 <Route path="/register" element={<Register addPerson={addPerson} />} />
             </Routes>
         </BrowserRouter>
