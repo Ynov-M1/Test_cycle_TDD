@@ -1,26 +1,12 @@
 describe("Navigation and User Registration E2E Tests", () => {
 
     const newUser = {
-        firstName: "Théo",
-        lastName: "Lafond",
-        email: "theo@example.com",
-        birthDate: "2001-09-02",
+        firstName: "Cristophe",
+        lastName: "Trival",
+        email: "Cri.trival@example.com",
+        birthDate: "1989-01-22",
         zip: "03100",
         city: "Montluçon"
-    };
-
-    const apiUser = {
-        id: 11,
-        name: "Théo Lafond",
-        username: "TheoL",
-        email: "theo@example.com",
-        birthDate: "2001-09-02",
-        address: {
-            street: "1 Rue de Test",
-            suite: "Apt 101",
-            city: "Montluçon",
-            zipcode: "03100"
-        }
     };
 
     beforeEach(() => {
@@ -29,22 +15,8 @@ describe("Navigation and User Registration E2E Tests", () => {
 
     context("Nominal Scenario: Add a valid user", () => {
         it("should allow a user to register successfully", () => {
-            // GET /users → empty list
-            cy.intercept('GET', 'https://jsonplaceholder.typicode.com/users', {
-                statusCode: 200,
-                body: []
-            }).as('getUsers');
-
-            // POST /users → success
-            cy.intercept('POST', 'https://jsonplaceholder.typicode.com/users', {
-                statusCode: 201,
-                body: newUser
-            }).as('createUser');
-
-            cy.wait('@getUsers');
-
-            cy.get('[data-cy=user-count]').should("contain", "0");
-            cy.get('[data-cy=user-list]').should("not.exist");
+            cy.get('[data-cy=user-count]').should("contain", "2");
+            cy.get('[data-cy=user-list]').should("exist");
 
             // Navigate to register
             cy.get('[data-cy=nav-register]').click();
@@ -60,8 +32,6 @@ describe("Navigation and User Registration E2E Tests", () => {
 
             cy.get('[data-cy=submit]').click();
 
-            cy.wait('@createUser');
-
             cy.get('#success-toast').should('be.visible')
                 .and('contain.text', "Enregistré avec succès");
 
@@ -69,67 +39,79 @@ describe("Navigation and User Registration E2E Tests", () => {
             cy.get('[data-cy=back-home]').click();
             cy.url().should("eq", Cypress.config().baseUrl);
 
-            cy.get('[data-cy=user-count]').should("contain", "1");
+            cy.get('[data-cy=user-count]').should("contain", "3");
             cy.get('[data-cy=user-list]').should("contain", `${newUser.firstName} ${newUser.lastName}`);
         });
     });
 
     context("Error Scenario: Email already exists (400)", () => {
         it("should display EMAIL_ALREADY_EXISTS error", () => {
-            // Existing user
-            cy.intercept('GET', 'https://jsonplaceholder.typicode.com/users', {
-                statusCode: 200,
-                body: [apiUser]
-            }).as('getUsers');
 
-            // POST /users → 400 error
-            cy.intercept('POST', 'https://jsonplaceholder.typicode.com/users', {
-                statusCode: 400,
-                body: { message: "EMAIL_ALREADY_EXISTS" }
-            }).as('createUserFail');
+            cy.get('[data-cy=user-count]').should("contain", "3");
 
-            cy.wait('@getUsers');
+            cy.get('[data-cy=user-list]')
+                .children()
+                .eq(2)
+                .then(($li) => {
+                    const text = $li.text().trim();
+                    const [fullName, emailPart] = text.split('(');
+                    const [firstName, lastName] = fullName.trim().split(' ');
+                    const email = emailPart.replace(')', '').trim();
 
-            cy.get('[data-cy=user-count]').should("contain", "1");
+                    const existingUser = {
+                        firstName,
+                        lastName,
+                        email
+                    };
 
-            cy.get('[data-cy=nav-register]').click();
-            cy.url().should("include", "/register");
+                    cy.get('[data-cy=nav-register]').click();
+                    cy.url().should("include", "/register");
 
-            // Fill form with existing email
-            cy.get('[data-cy=firstName]').type("Jean");
-            cy.get('[data-cy=lastName]').type("Dupont");
-            cy.get('[data-cy=email]').type("fake@gmail.com");
-            cy.get('[data-cy=birthDate]').type("1995-05-10");
-            cy.get('[data-cy=zip]').type("75000");
-            cy.get('[data-cy=city]').type("Paris");
+                    // Fill form with existing email
+                    cy.get('[data-cy=firstName]').type(existingUser.firstName);
+                    cy.get('[data-cy=lastName]').type(existingUser.lastName);
+                    cy.get('[data-cy=email]').type(existingUser.email);
+                    cy.get('[data-cy=birthDate]').type("2001-01-01");
+                    cy.get('[data-cy=zip]').type("03100");
+                    cy.get('[data-cy=city]').type("Montluçon");
 
-            cy.get('[data-cy=submit]').click();
+                    cy.get('[data-cy=submit]').click();
 
-            cy.wait('@createUserFail');
+                    // Should display error
+                    cy.contains("Cet email est déjà utilisé").should("be.visible");
 
-            // Should display error
-            cy.contains("Cet email est déjà utilisé").should("be.visible");
+                    // Back home
+                    cy.get('[data-cy=back-home]').click();
+                    cy.get('[data-cy=user-count]').should("contain", "3");
+                });
+        });
+    });
 
-            // Back home
-            cy.get('[data-cy=back-home]').click();
-            cy.get('[data-cy=user-count]').should("contain", "1");
+    describe("User Deletion via UI (API)", () => {
+        it("should delete the second user using the trash button", () => {
+            cy.get('[data-cy=user-list]').children().should('have.length.greaterThan', 1);
+
+            cy.get('[data-cy=user-list]')
+                .children()
+                .eq(2)
+                .as('secondUserRow');
+
+            cy.get('@secondUserRow').find('button.delete-btn').click();
+
+            cy.on('window:confirm', (text) => {
+                expect(text).to.contain('Voulez-vous vraiment supprimer');
+                return true;
+            });
+
+            cy.get('#success-delete-user-toast').should('be.visible')
+                .and('contain.text', "Utilisateur supprimé avec succès !");
+
+            cy.get('[data-cy=user-list]').children().should('have.length.lessThan', 3);
         });
     });
 
     context("Error Scenario: Server crash (500)", () => {
         it("should display alert and not crash app", () => {
-            // GET /users → empty list
-            cy.intercept('GET', 'https://jsonplaceholder.typicode.com/users', {
-                statusCode: 200,
-                body: []
-            }).as('getUsers');
-
-            // POST /users → server error 500
-            cy.intercept('POST', 'https://jsonplaceholder.typicode.com/users', {
-                statusCode: 500
-            }).as('createUserFail');
-
-            cy.wait('@getUsers');
 
             cy.get('[data-cy=nav-register]').click();
 
@@ -141,7 +123,6 @@ describe("Navigation and User Registration E2E Tests", () => {
             cy.get('[data-cy=city]').type("Paris");
 
             cy.get('[data-cy=submit]').click();
-            cy.wait('@createUserFail');
 
             cy.get('.toast-server-error')
                 .should('be.visible')
@@ -149,7 +130,7 @@ describe("Navigation and User Registration E2E Tests", () => {
 
             // Back home works
             cy.get('[data-cy=back-home]').click();
-            cy.get('[data-cy=user-count]').should("contain", "0");
+            cy.get('[data-cy=user-count]').should("contain", "3");
         });
     });
 

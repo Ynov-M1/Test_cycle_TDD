@@ -34,10 +34,14 @@ export default function Home({persons, loading, serverError, deletePerson}) {
         if (window.confirm(`Voulez-vous vraiment supprimer ${user.firstName} ${user.lastName} ?`)) {
             deletePerson(user.id)
                 .then(() => {
-                    toast.success("Utilisateur supprimé avec succès !");
+                    toast.success("Utilisateur supprimé avec succès !", {
+                        toastId: "success-delete-user-toast"
+                    });
                 })
                 .catch(() => {
-                    toast.error("Erreur lors de la suppression.");
+                    toast.error("Erreur lors de la suppression.", {
+                    toastId: "error-delete-user-toast"
+                    });
                 });
         }
     };
