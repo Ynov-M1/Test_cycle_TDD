@@ -9,6 +9,7 @@ COPY package.json pnpm-lock.yaml ./
 
 # Installer pnpm et les dépendances
 RUN npm install -g pnpm \
-    && pnpm install --frozen-lockfile
+    && pnpm install --frozen-lockfile \
+    && pnpm exec cypress install
 
 EXPOSE 5173

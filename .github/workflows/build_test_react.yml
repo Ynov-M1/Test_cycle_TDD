@@ -108,34 +108,14 @@ jobs:
       - name: Push FastAPI image to Docker Hub
         run: docker compose -f ./docker-compose.yml push api
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 10
-
-      - name: Run Cypress tests (excluding @server-error)
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: app
-          start: pnpm dev
-          wait-on: 'http://localhost:5173/Test_cycle_TDD/'
-          command: pnpm run cy:normal
+      - name: Run Cypress normal tests
+        run: docker compose exec frontend pnpm run cy:normal
 
       - name: Stop API container
         run: docker compose -f ./docker-compose.yml stop api
 
-      - name: Run Cypress tests (@server-error)
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: app
-          start: pnpm dev
-          wait-on: 'http://localhost:5173/Test_cycle_TDD/'
-          command: pnpm run cy:server-error
+      - name: Run Cypress server-error tests
+        run: docker compose exec frontend pnpm run cy:server-error
 
       - name: Stop and remove CI containers
         if: always()
