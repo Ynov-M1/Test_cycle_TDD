@@ -39,6 +39,11 @@ services:
       MYSQL_HOST: db
     env_file:
       - ./server/.env
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/users')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build:
@@ -53,5 +58,5 @@ services:
       - /app/node_modules
     depends_on:
       api:
-        condition: service_started
+        condition: service_healthy
     command: pnpm dev --host

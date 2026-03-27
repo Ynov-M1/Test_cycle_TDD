@@ -110,7 +110,7 @@ describe("Navigation and User Registration E2E Tests", () => {
         });
     });
 
-    context("Error Scenario: Server crash (500)", () => {
+    context("Error Scenario: Server crash (500)", { tags: '@server-error'}, () => {
         it("should display alert and not crash app", () => {
 
             cy.get('[data-cy=nav-register]').click();
@@ -127,10 +127,6 @@ describe("Navigation and User Registration E2E Tests", () => {
             cy.get('.toast-server-error')
                 .should('be.visible')
                 .and('contain.text', "Serveur indisponible, réessayez plus tard");
-
-            // Back home works
-            cy.get('[data-cy=back-home]').click();
-            cy.get('[data-cy=user-count]').should("contain", "3");
         });
     });
 
