@@ -110,6 +110,10 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 10
+      - name: Start React dev server
+        run: cd app && pnpm run dev &
+      - name: Wait for server
+        run: npx wait-on http://localhost:5173/Test_cycle_TDD/
       - name: Run Cypress @server-error tests
         run: cd app && pnpm exec cypress run --env grepTags="@server-error"
 
@@ -173,7 +177,7 @@ jobs:
     needs: [build_test, publish_api]
     services:
       api:
-        image: theolafond/api_fastapi:latest
+        image: theolafond/api_fastapi:0.0.3
         ports:
           - 8000:8000
         env:
