@@ -5,12 +5,11 @@ on:
     branches: [master]
 
 jobs:
-  build_test:
-    name: Build and Test React App
+  setup_cache:
+    name: Setup Node.js, pnpm & Cache Cypress
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
+    outputs:
+      cache-key: ${{ steps.cache.outputs.cache-key }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,14 +24,46 @@ jobs:
         with:
           version: 10
 
-      - name: Install dependencies
-        run: cd app && pnpm install --frozen-lockfile
+      - name: Cache pnpm, node_modules & Cypress binary
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            app/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('app/pnpm-lock.yaml') }}-cypress
 
-      - name: Install Cypress binary
-        run: cd app && pnpm exec cypress install
+      - name: Install dependencies & Cypress
+        run: |
+          cd app
+          pnpm install --frozen-lockfile
+          pnpm exec cypress install
 
-      - name: Generate JSDoc
-        run: cd app && pnpm run doc
+  build_test:
+    name: Build and Test React App
+    runs-on: ubuntu-latest
+    needs: setup_cache
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pnpm & Cypress cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            app/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('app/pnpm-lock.yaml') }}-cypress
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
 
       - name: Build React App
         run: cd app && pnpm run build
@@ -62,6 +93,15 @@ jobs:
     needs: build_test
     steps:
       - uses: actions/checkout@v4
+      - name: Restore pnpm & Cypress cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            app/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('app/pnpm-lock.yaml') }}-cypress
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -70,8 +110,6 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 10
-      - name: Install dependencies
-        run: cd app && pnpm install --frozen-lockfile
       - name: Run Cypress @server-error tests
         run: cd app && pnpm exec cypress run --env grepTags="@server-error"
 
@@ -79,13 +117,11 @@ jobs:
     name: Build, Test and Publish FastAPI (Docker Compose)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
+      - uses: actions/checkout@v4
       - name: Create Docker env file
         run: |
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "MYSQL_DATABASE=ynov_ci" >> .env
-
       - name: Create API env file
         run: |
           mkdir -p server
@@ -94,60 +130,69 @@ jobs:
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> server/.env
           echo "MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> server/.env
           echo "MYSQL_DATABASE=ynov_ci" >> server/.env
-
       - name: Build Docker Images
         run: docker compose -f ./docker-compose.yml build
-
       - name: Launch CI containers and wait for healthchecks
         run: docker compose -f ./docker-compose.yml up -d --wait
-
       - name: Test API Endpoint
         shell: bash
         run: |
           for i in {1..30}; do
              HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" http://localhost:8000/users || true)
-             if [ "$HTTP_CODE" = "200" ]; then
-               break
-             fi
+             if [ "$HTTP_CODE" = "200" ]; then break; fi
              echo "Waiting for API... attempt $i/30 (HTTP=$HTTP_CODE)"
              sleep 2
            done
-
            if [ "$HTTP_CODE" != "200" ]; then
              echo "API did not return HTTP 200."
              [ -f response.json ] && cat response.json || true
              docker logs fastAPI || true
              exit 1
            fi
-
            USERS_COUNT=$(jq '.utilisateurs | length' response.json)
            if [ -z "$USERS_COUNT" ] || [ "$USERS_COUNT" -le 0 ]; then
              echo "Endpoint returned an empty users list."
              cat response.json
              exit 1
            fi
-
            echo "Validation passed with $USERS_COUNT users."
-
       - name: Stop and remove CI containers
         if: always()
         run: docker compose -f ./docker-compose.yml down
-
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Push FastAPI image to Docker Hub
         run: docker compose -f ./docker-compose.yml push api
 
   cypress_normal_tests:
     name: Cypress tests (API up)
     runs-on: ubuntu-latest
-    needs: [ build_test, publish_api ]
+    needs: [build_test, publish_api]
+    services:
+      api:
+        image: theolafond/api_fastapi:latest
+        ports:
+          - 8000:8000
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        options: >-
+          --health-cmd "curl -f http://localhost:8000/users || exit 1"
+          --health-interval 5s
+          --health-timeout 2s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
+      - name: Restore pnpm & Cypress cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            app/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('app/pnpm-lock.yaml') }}-cypress
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -166,19 +211,23 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build_test, cypress_server_error, cypress_normal_tests]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      - name: Restore pnpm & Cypress cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            app/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('app/pnpm-lock.yaml') }}-cypress
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 10
-
       - name: Install dependencies
         run: cd app && pnpm install --frozen-lockfile
 
@@ -244,6 +293,7 @@ jobs:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
     steps:
+      - uses: actions/checkout@v4
       - name: Deploy to Github Pages
         id: deployment
         uses: actions/deploy-pages@v4
