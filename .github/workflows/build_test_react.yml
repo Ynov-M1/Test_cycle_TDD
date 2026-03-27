@@ -109,13 +109,19 @@ jobs:
         run: docker compose -f ./docker-compose.yml push api
 
       - name: Run Cypress normal tests
-        run: docker compose exec frontend pnpm run cy:normal
+        run: |
+          cd app
+          pnpm install --frozen-lockfile
+          pnpm exec cypress install
+          pnpm run cy:normal
 
       - name: Stop API container
         run: docker compose -f ./docker-compose.yml stop api
 
       - name: Run Cypress server-error tests
-        run: docker compose exec frontend pnpm run cy:server-error
+        run: |
+          cd app
+          pnpm run cy:server-error
 
       - name: Stop and remove CI containers
         if: always()
