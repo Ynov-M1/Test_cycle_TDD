@@ -71,6 +71,10 @@ jobs:
         working-directory: app
         run: pnpm install --frozen-lockfile
 
+      - name: Install Cypress binary
+        working-directory: app
+        run: pnpm exec cypress install
+
       - name: Create Docker env file
         run: |
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
