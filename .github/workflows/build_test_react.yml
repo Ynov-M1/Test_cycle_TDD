@@ -118,11 +118,16 @@ jobs:
         with:
           version: 10
 
-      - name: Run Cypress normal tests
+      - name: Install dependencies & Cypress before run
         run: |
           cd app
           pnpm install --frozen-lockfile
           pnpm exec cypress install
+          pnpm dev
+
+      - name: Run Cypress normal tests
+        run: |
+          cd app
           pnpm run cy:normal
 
       - name: Stop API container
