@@ -109,17 +109,23 @@ jobs:
         run: docker compose -f ./docker-compose.yml push api
 
       - name: Run Cypress tests (excluding @server-error)
-        run: |
-          cd app
-          pnpm exec cypress run --env grepTags="-@server-error"
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: app
+          start: pnpm dev
+          wait-on: 'http://localhost:5173/Test_cycle_TDD/'
+          command: pnpm run cy:normal
 
       - name: Stop API container
         run: docker compose -f ./docker-compose.yml stop api
 
       - name: Run Cypress tests (@server-error)
-        run: |
-          cd app
-          pnpm exec cypress run --env grepTags="@server-error"
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: app
+          start: pnpm dev
+          wait-on: 'http://localhost:5173/Test_cycle_TDD/'
+          command: pnpm run cy:server-error
 
       - name: Stop and remove CI containers
         if: always()

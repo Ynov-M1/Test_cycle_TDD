@@ -20,6 +20,9 @@
     "test": "vitest run --coverage",
     "doc": "jsdoc -R ../README.md -c jsdoc.json -r -d ./public/docs --private",
     "cypress": "cypress open",
+    "cy:run": "cypress run",
+    "cy:normal": "cypress run --expose grepTags=-@server-error",
+    "cy:server-error": "cypress run --expose grepTags=@server-error",
     "build-npm": "cross-env NODE_ENV=production rimraf dist && npx babel src --out-dir dist --copy-files"
   },
   "dependencies": {
